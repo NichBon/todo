@@ -28,7 +28,7 @@ public class TodoService {
 
     public Todo findById(long id) {
         Todo foundTodo = this.todoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No Category with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("No Todo with id: " + id));
         return foundTodo;
     }
 
@@ -43,6 +43,21 @@ public class TodoService {
         Todo foundTodo = findById(data.getId());
         this.modelMapper.map(data, foundTodo);
         this.todoRepository.save(foundTodo);
+        return foundTodo;
+    }
+
+    public Todo archiveById(long id) {
+        Todo foundTodo = this.todoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No Todo with id: " + id));
+
+        if (foundTodo.getArchivedAt().isEmpty()) {
+            foundTodo.setArchivedAt(LocalDateTime.now());
+        } else {
+            foundTodo.setArchivedAt(null);
+        }
+
+        this.todoRepository.save(foundTodo);
+
         return foundTodo;
     }
 }

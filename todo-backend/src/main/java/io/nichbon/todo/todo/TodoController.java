@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.nichbon.todo.category.dtos.UpdateCategoryDTO;
 import io.nichbon.todo.todo.dtos.CreateTodoDTO;
 import io.nichbon.todo.todo.dtos.UpdateTodoDTO;
 import jakarta.validation.Valid;
@@ -41,7 +40,7 @@ public class TodoController {
             Todo todo = this.todoService.findById(id);
             return new ResponseEntity<>(todo, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -55,6 +54,16 @@ public class TodoController {
     public ResponseEntity<Todo> updateById(@Valid @RequestBody UpdateTodoDTO data) {
         Todo todo = this.todoService.updateById(data);
         return new ResponseEntity<>(todo, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity<?> archiveById(@PathVariable long id) {
+        try {
+            Todo todo = this.todoService.archiveById(id);
+            return new ResponseEntity<>(todo, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
