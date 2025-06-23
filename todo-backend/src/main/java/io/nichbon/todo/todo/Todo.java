@@ -2,8 +2,10 @@ package io.nichbon.todo.todo;
 
 import io.nichbon.todo.category.Category;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,7 +34,7 @@ public class Todo {
     public enum CompletionStatus {
         ON_HOLD,
         COMPLETED,
-        NEW,
+        TO_DO,
         IN_PROGRESS
     }
 
@@ -43,10 +45,11 @@ public class Todo {
     private Priority priority;
 
     @Column
-    private Date createdAt;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @Column
-    private Date archivedAt;
+    private LocalDateTime archivedAt;
 
     @Column
     private boolean isArchived;
@@ -74,19 +77,19 @@ public class Todo {
         this.priority = priority;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Optional<Date> getArchivedAt() {
+    public Optional<LocalDateTime> getArchivedAt() {
         return Optional.ofNullable(archivedAt);
     }
 
-    public void setArchivedAt(Date archivedAt) {
+    public void setArchivedAt(LocalDateTime archivedAt) {
         this.archivedAt = archivedAt;
     }
 
@@ -112,6 +115,14 @@ public class Todo {
 
     public void setCategories(Category[] categories) {
         this.categories = categories;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
 }
