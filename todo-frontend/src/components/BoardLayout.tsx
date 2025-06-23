@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import ToDoColumn from './ToDoColumn';
-// import { dummyData } from '../data/dummyData';
 import { emptyBoard, type Columns, type Todo } from '../types/types';
 import { fetchTodos } from '../services/dbservice.ts'
+
 
 const BoardLayout = () => {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [columns, setColumns] = useState<Columns>(emptyBoard);
+    const [columns, setColumns] = useState<Columns>({});
     const didFetch = useRef(false);
 
     useEffect(() => {
@@ -17,10 +17,31 @@ const BoardLayout = () => {
 
         fetchTodos()
             .then((response) => {
+                // setTodos(response);
+
+                // const columnMap = {
+                //     TO_DO: 'todo',
+                //     IN_PROGRESS: 'in-progress',
+                //     COMPLETED: 'done',
+                //     ON_HOLD: 'on-hold'
+                // } as const;
+
+                // console.log("attempting reduce")
+                // const newColumns = response.reduce<Columns>((acc, todo) => {
+                //     const key = columnMap[todo.status];
+                //     acc[key].items.push(todo);
+                //     return acc;
+                // }, emptyBoard);
+
+                // console.log("finished reduce")
+                // console.log(newColumns)
+
+                // setColumns(newColumns);
+
+
                 setTodos(response);
-                const newColumns = { ...columns }
+                const newColumns = emptyBoard;
                 for (const todo of response) {
-                    console.log(todo.status)
                     switch (todo.status) {
                         case 'TO_DO':
                             newColumns['todo'].items.push(todo);

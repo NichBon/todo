@@ -7,7 +7,7 @@ import TodoItem from './TodoItem';
 type Props = {
   columnId: string;
   column: ColumnData;
-  onDrop: (todoId: string, destinationColId: string) => void;
+  onDrop: (todoId: number, destinationColId: string) => void;
 }
 
 const TodoColumn: React.FC<Props> = ({ columnId, column, onDrop }) => {
@@ -16,11 +16,13 @@ const TodoColumn: React.FC<Props> = ({ columnId, column, onDrop }) => {
   useEffect(() => {
     if (!ref.current) return;
 
+    console.log(`mounted drop target: ${columnId}`)
+
     return dropTargetForElements({
       element: ref.current,
       getData: () => ({ type: 'column', id: columnId }),
       onDrop: ({ source }) => {
-        if (source?.data?.type === 'todo' && typeof source.data.id === 'string') {
+        if (source?.data?.type === 'todo' && typeof source.data.id === 'number') {
           onDrop(source.data.id, columnId);
         }
       }
