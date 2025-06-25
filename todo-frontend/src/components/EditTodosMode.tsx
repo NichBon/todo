@@ -8,7 +8,7 @@ type Props = {
     onExit: (updated: Todo[]) => void;
 };
 
-const EditMode: React.FC<Props> = ({ todos, onExit }) => {
+const EditTodosMode: React.FC<Props> = ({ todos, onExit }) => {
 
     const [editMode, setEditMode] = useState(false);
     const [changedTodos, setChangedTodos] = useState<Todo[]>([]);
@@ -119,6 +119,6 @@ const EditMode: React.FC<Props> = ({ todos, onExit }) => {
     )
 }
 
-export default EditMode
+export default EditTodosMode
 
 

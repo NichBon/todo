@@ -3,7 +3,8 @@ import ToDoColumn from './ToDoColumn';
 import { emptyBoard, type Category, type Columns, type Todo } from '../types/types';
 import { fetchCategories, fetchTodos } from '../services/dbservice.ts'
 import CategoryFilterBar, { type FilterState } from './CategoryFilterBar.tsx';
-import EditMode from './EditMode.tsx';
+import EditTodosMode from './EditTodosMode.tsx';
+import EditCategoriesMode from './EditCategoriesMode.tsx';
 
 
 const BoardLayout = () => {
@@ -87,12 +88,12 @@ const BoardLayout = () => {
         <>
             {loading === true && <div>Loading...</div>}
             {error !== null && <p>Error: {error}</p>}
-            {/* <CategoryFilterBar
+            <CategoryFilterBar
                 categories={categories}
                 onChange={(filters) => {
                     // derive filteredTodos before rendering
                 }}
-            /> */}
+            />
 
             {todos.length !== 0 && <div style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
                 {Object.entries(columns).map(([id, column]) => (
@@ -100,7 +101,8 @@ const BoardLayout = () => {
                 ))}
             </div>}
 
-            <EditMode todos={todos} onExit={(updated) => setTodos(updated)}></EditMode>
+            <EditCategoriesMode categories={categories} onExit={(updated) => setCategories(updated)}></EditCategoriesMode>
+            <EditTodosMode todos={todos} onExit={(updated) => setTodos(updated)}></EditTodosMode>
         </>
     );
 };

@@ -27,6 +27,14 @@ public class CategoryService {
         return savedCategory;
     }
 
+    public Category[] batchCreate(CreateCategoryDTO[] data) {
+        Category[] createdCategories = new Category[data.length];
+        for (int i = 0; i < data.length; i++) {
+            createdCategories[i] = create(data[i]);
+        }
+        return createdCategories;
+    }
+
     public List<Category> getAll() {
         List<Category> categories = this.categoryRepository.findAll();
         return categories;
@@ -51,6 +59,14 @@ public class CategoryService {
         this.modelMapper.map(data, foundCategory);
         this.categoryRepository.save(foundCategory);
         return foundCategory;
+    }
+
+    public Category[] batchUpdate(UpdateCategoryDTO[] data) {
+        Category[] updatedCategories = new Category[data.length];
+        for (int i = 0; i < data.length; i++) {
+            updatedCategories[i] = updateById(data[i]);
+        }
+        return updatedCategories;
     }
 
 }

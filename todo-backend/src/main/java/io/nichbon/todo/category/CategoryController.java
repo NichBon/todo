@@ -32,6 +32,12 @@ public class CategoryController {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
+    @PostMapping("/batch")
+    public ResponseEntity<Category[]> batchCreateTodos(@Valid @RequestBody CreateCategoryDTO[] data) {
+        Category[] saved = this.categoryService.batchCreate(data);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
     @GetMapping()
     public ResponseEntity<List<Category>> findAll() {
         List<Category> categories = this.categoryService.getAll();
@@ -48,6 +54,16 @@ public class CategoryController {
     public ResponseEntity<Category> updateById(@Valid @RequestBody UpdateCategoryDTO data) {
         Category category = this.categoryService.updateById(data);
         return new ResponseEntity<>(category, HttpStatus.OK);
+    }
+
+    @PatchMapping("/batch")
+    public ResponseEntity<?> batchUpdate(@Valid @RequestBody UpdateCategoryDTO[] data) {
+        try {
+            Category[] categories = this.categoryService.batchUpdate(data);
+            return new ResponseEntity<>(categories, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

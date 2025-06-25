@@ -9,15 +9,18 @@ export type CompletionStatus =
     | 'TO_DO'
     | 'IN_PROGRESS';
 
-export type Color =
-    'RED'
-    | 'BLUE'
-    | 'PURPLE'
-    | 'GREEN'
-    | 'YELLOW'
-    | 'ORANGE'
-    | 'GREY'
-    | 'CYAN';
+export const COLORS = [
+    'RED',
+    'BLUE',
+    'PURPLE',
+    'GREEN',
+    'YELLOW',
+    'ORANGE',
+    'GREY',
+    'CYAN'
+] as const;
+
+export type Color = typeof COLORS[number]
 
 export type Todo = {
     id: string;
@@ -37,10 +40,10 @@ export type CreateTodoDTO = {
     name: string;
     priority: string;
     status: CompletionStatus;
-    categoryIds: number[];
+    categoryIds: string[];
 }
 
-export function createTodoDTO(todo: Todo): CreateTodoDTO {
+export function toCreateTodoDTO(todo: Todo): CreateTodoDTO {
     return {
         name: todo.name,
         status: todo.status,
@@ -50,11 +53,38 @@ export function createTodoDTO(todo: Todo): CreateTodoDTO {
 }
 
 export type Category = {
-    id: number;
+    id: string;
     name: string;
     color: Color;
-    todos?: Todo[];
+    todos: Todo[];
 };
+
+export interface CreateCategoryDTO {
+    name: string;
+    color: Color;
+    todoIds: string[];
+}
+
+export interface UpdateCategoryDTO extends CreateCategoryDTO {
+    id: string;
+}
+
+export function toCreateCategoryDTO(category: Category): CreateCategoryDTO {
+    return {
+        name: category.name,
+        color: category.color,
+        todoIds: category.todos.map(todo => todo.id)
+    };
+}
+
+export function toUpdateCategoryDTO(category: Category): UpdateCategoryDTO {
+    return {
+        id: category.id,
+        name: category.name,
+        color: category.color,
+        todoIds: category.todos.map(todo => todo.id)
+    };
+}
 
 export type ColumnData = {
     name: string;
