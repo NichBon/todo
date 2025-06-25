@@ -66,4 +66,14 @@ public class TodoController {
         }
     }
 
+    @PatchMapping("/batch")
+    public ResponseEntity<?> batchUpdate(@Valid @RequestBody UpdateTodoDTO[] data) {
+        try {
+            Todo[] todos = this.todoService.batchUpdate(data);
+            return new ResponseEntity<>(todos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

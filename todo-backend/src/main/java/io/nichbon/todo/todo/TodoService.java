@@ -46,6 +46,14 @@ public class TodoService {
         return foundTodo;
     }
 
+    public Todo[] batchUpdate(UpdateTodoDTO[] data) {
+        Todo[] updatedTodos = new Todo[data.length];
+        for (int i = 0; i < data.length; i++) {
+            updatedTodos[i] = updateById(data[i]);
+        }
+        return updatedTodos;
+    }
+
     public Todo archiveById(long id) {
         Todo foundTodo = this.todoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Todo with id: " + id));
@@ -60,4 +68,5 @@ public class TodoService {
 
         return foundTodo;
     }
+
 }
