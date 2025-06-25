@@ -85,9 +85,9 @@ const BoardLayout = () => {
 
     return (
         <>
-            {/* {loading === true && <div>Loading...</div>}
+            {loading === true && <div>Loading...</div>}
             {error !== null && <p>Error: {error}</p>}
-            <CategoryFilterBar
+            {/* <CategoryFilterBar
                 categories={categories}
                 onChange={(filters) => {
                     // derive filteredTodos before rendering

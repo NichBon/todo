@@ -26,13 +26,28 @@ export type Todo = {
     createdAt: string;
     archivedAt: string | null;
     status: CompletionStatus;
-    category: Category[];
+    categories: Category[];
 };
 
 export type UpdateTodo = {
     id: string;
 }
 
+export type CreateTodoDTO = {
+    name: string;
+    priority: string;
+    status: CompletionStatus;
+    categoryIds: number[];
+}
+
+export function createTodoDTO(todo: Todo): CreateTodoDTO {
+    return {
+        name: todo.name,
+        status: todo.status,
+        priority: todo.priority,
+        categoryIds: todo.categories.map(category => category.id)
+    };
+}
 
 export type Category = {
     id: number;
