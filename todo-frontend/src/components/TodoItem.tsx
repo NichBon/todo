@@ -12,8 +12,6 @@ const TodoItem: React.FC<Props> = ({ todo }) => {
     useEffect(() => {
         if (!ref.current) return;
 
-        console.log(`mounted todo item with id: ${todo.id}`)
-
         return draggable({
             element: ref.current,
             getInitialData: () => ({ type: 'todo', id: todo.id })

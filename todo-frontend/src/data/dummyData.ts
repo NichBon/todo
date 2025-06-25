@@ -1,4 +1,4 @@
-import type { Columns } from "../types/types";
+// import type { Columns } from "../types/types";
 
 // export const dummyData: Columns = {
 //     'todo': {

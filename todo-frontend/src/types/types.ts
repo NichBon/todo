@@ -29,6 +29,10 @@ export type Todo = {
     category: Category[];
 };
 
+export type UpdateTodo = {
+    id: string;
+}
+
 
 export type Category = {
     id: number;

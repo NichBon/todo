@@ -16,8 +16,6 @@ const TodoColumn: React.FC<Props> = ({ columnId, column, onDrop }) => {
   useEffect(() => {
     if (!ref.current) return;
 
-    console.log(`mounted drop target: ${columnId}`)
-
     return dropTargetForElements({
       element: ref.current,
       getData: () => ({ type: 'column', id: columnId }),
