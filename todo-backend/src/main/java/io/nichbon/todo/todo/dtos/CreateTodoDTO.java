@@ -1,5 +1,7 @@
 package io.nichbon.todo.todo.dtos;
 
+import java.util.List;
+
 import io.nichbon.todo.todo.Todo.CompletionStatus;
 import io.nichbon.todo.todo.Todo.Priority;
 import jakarta.validation.constraints.NotBlank;
@@ -13,13 +15,25 @@ public class CreateTodoDTO {
     @NotNull
     private CompletionStatus status;
 
+    public List<Long> getCategoryIds() {
+        return categoryIds;
+    }
+
+    public void setCategoryIds(List<Long> categoryIds) {
+        this.categoryIds = categoryIds;
+    }
+
     @NotNull
     private Priority priority;
 
-    public CreateTodoDTO(@NotBlank String name, @NotNull CompletionStatus status, @NotNull Priority priority) {
+    List<Long> categoryIds;
+
+    public CreateTodoDTO(@NotBlank String name, @NotNull CompletionStatus status, @NotNull Priority priority,
+            List<Long> categoryIds) {
         this.name = name;
         this.status = status;
         this.priority = priority;
+        this.categoryIds = categoryIds;
     }
 
     public String getName() {

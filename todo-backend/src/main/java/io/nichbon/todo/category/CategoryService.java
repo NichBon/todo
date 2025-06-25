@@ -1,6 +1,7 @@
 package io.nichbon.todo.category;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,14 @@ public class CategoryService {
         Category foundCategory = this.categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Category with id: " + id));
         return foundCategory;
+    }
+
+    public List<Category> findListByIds(List<Long> categories) {
+        return categories.stream()
+                .map(categoryRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
     }
 
     public Category updateById(UpdateCategoryDTO data) {

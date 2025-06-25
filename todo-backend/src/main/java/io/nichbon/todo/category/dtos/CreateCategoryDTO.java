@@ -3,7 +3,6 @@ package io.nichbon.todo.category.dtos;
 import java.util.List;
 
 import io.nichbon.todo.category.Category.Color;
-import io.nichbon.todo.todo.Todo;
 import jakarta.validation.constraints.NotBlank;
 
 public class CreateCategoryDTO {
@@ -13,12 +12,12 @@ public class CreateCategoryDTO {
 
     private Color color;
 
-    private List<Todo> todos;
+    private List<Long> todoIds;
 
-    public CreateCategoryDTO(@NotBlank String name, Color color, List<Todo> todos) {
+    public CreateCategoryDTO(@NotBlank String name, Color color, List<Long> todoIds) {
         this.name = name;
         this.color = color;
-        this.todos = todos;
+        this.todoIds = todoIds;
     }
 
     public String getName() {
@@ -29,8 +28,8 @@ public class CreateCategoryDTO {
         return color;
     }
 
-    public List<Todo> getTodos() {
-        return todos;
+    public List<Long> getTodoIds() {
+        return todoIds;
     }
 
 }

@@ -45,8 +45,14 @@ public class TodoController {
     }
 
     @PostMapping()
-    public ResponseEntity<Todo> postMethodName(@Valid @RequestBody CreateTodoDTO data) {
+    public ResponseEntity<Todo> createTodo(@Valid @RequestBody CreateTodoDTO data) {
         Todo saved = this.todoService.create(data);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<Todo[]> batchCreateTodos(@Valid @RequestBody CreateTodoDTO[] data) {
+        Todo[] saved = this.todoService.batchCreate(data);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 

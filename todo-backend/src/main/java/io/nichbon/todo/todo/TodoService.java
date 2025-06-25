@@ -6,6 +6,8 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import io.nichbon.todo.category.Category;
+import io.nichbon.todo.category.CategoryService;
 import io.nichbon.todo.todo.dtos.CreateTodoDTO;
 import io.nichbon.todo.todo.dtos.UpdateTodoDTO;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,10 +17,12 @@ public class TodoService {
 
     private TodoRepository todoRepository;
     private ModelMapper modelMapper;
+    private CategoryService categoryService;
 
-    public TodoService(TodoRepository todoRepository, ModelMapper modelMapper) {
+    public TodoService(TodoRepository todoRepository, ModelMapper modelMapper, CategoryService categoryService) {
         this.todoRepository = todoRepository;
         this.modelMapper = modelMapper;
+        this.categoryService = categoryService;
     }
 
     public List<Todo> getAll() {
@@ -35,8 +39,18 @@ public class TodoService {
     public Todo create(CreateTodoDTO data) {
         Todo newTodo = modelMapper.map(data, Todo.class);
         newTodo.setCreatedAt(LocalDateTime.now());
+        List<Category> linkedCategories = categoryService.findListByIds(data.getCategoryIds());
+        newTodo.setCategories(linkedCategories.toArray(new Category[0]));
         Todo savedTodo = this.todoRepository.save(newTodo);
         return savedTodo;
+    }
+
+    public Todo[] batchCreate(CreateTodoDTO[] data) {
+        Todo[] createdTodos = new Todo[data.length];
+        for (int i = 0; i < data.length; i++) {
+            createdTodos[i] = create(data[i]);
+        }
+        return createdTodos;
     }
 
     public Todo updateById(UpdateTodoDTO data) {
