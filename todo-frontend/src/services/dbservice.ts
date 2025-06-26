@@ -10,7 +10,6 @@ export async function fetchTodos(): Promise<Todo[]> {
     }
 
     const data: Todo[] = await response.json();
-    console.log(data)
     return data;
 }
 
@@ -22,7 +21,6 @@ export async function fetchCategories(): Promise<Category[]> {
     }
 
     const data: Category[] = await response.json();
-    console.log(data)
     return data;
 }
 
@@ -31,13 +29,9 @@ export async function batchUpdateTodos(todos: Todo[]): Promise<Todo[]> {
     const patchTodos: UpdateTodoDTO[] = todos
         .filter((todo) => !todo.id.toString().startsWith('temp-'))
         .map((todo) => toUpdateTodoDTO(todo));
-    console.log("patchtodos")
-    console.log(patchTodos)
     const postTodos: CreateTodoDTO[] = todos
         .filter((todo) => todo.id.toString().startsWith('temp-'))
         .map((todo) => toCreateTodoDTO(todo));
-    console.log("posttodos")
-    console.log(postTodos)
     const patchResponse = await fetch(`${BASE_URL}/todos/batch`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

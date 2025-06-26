@@ -13,9 +13,10 @@ const CategoryFilterBar: React.FC<Props> = ({ categories, onChange }) => {
     const [filters, setFilters] = useState<Record<string, FilterState>>({});
 
     const handleFilterChange = (categoryId: string, newState: FilterState) => {
-        const next = { ...filters, [categoryId]: newState };
-        setFilters(next);
-        onChange(next);
+        const newFilters = { ...filters, [categoryId]: newState };
+        setFilters(newFilters);
+        onChange(newFilters);
+        console.log(newFilters);
     };
 
     const resetFilters = () => {

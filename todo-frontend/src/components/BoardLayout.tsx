@@ -5,6 +5,7 @@ import { fetchCategories, fetchTodos } from '../services/dbservice.ts'
 import CategoryFilterBar, { type FilterState } from './CategoryFilterBar.tsx';
 import EditTodosMode from './EditTodosMode/EditTodosMode.tsx';
 import EditCategoriesMode from './EditCategoriesMode.tsx';
+import { sortColumns } from '../services/dataManipluationService.ts';
 
 
 const BoardLayout = () => {
@@ -15,40 +16,6 @@ const BoardLayout = () => {
     const [categories, setCategories] = useState<Category[]>([])
     // for dev server
     const didFetch = useRef(false);
-
-    const sortColumns = (todos: Todo[]) => {
-        const newColumns = structuredClone(emptyBoard);
-        for (const todo of todos) {
-            switch (todo.status) {
-                case 'TO_DO':
-                    newColumns['todo'].items.push(todo);
-                    break;
-
-                case 'IN_PROGRESS':
-                    newColumns['in-progress'].items.push(todo);
-                    break;
-
-                case 'COMPLETED':
-                    newColumns['done'].items.push(todo);
-                    break;
-
-                case 'ON_HOLD':
-                    newColumns['on-hold'].items.push(todo);
-                    break;
-            }
-
-        }
-        return newColumns;
-    }
-
-    const areCategoriesEqual = (a: Category[], b: Category[]): boolean => {
-        const idsA = a.map(c => String(c.id)).sort();
-        const idsB = b.map(c => String(c.id)).sort();
-
-        if (idsA.length !== idsB.length) return false;
-
-        return idsA.every((id, index) => id === idsB[index]);
-    };
 
     useEffect(() => {
         // for dev server
@@ -99,9 +66,8 @@ const BoardLayout = () => {
             {error !== null && <p>Error: {error}</p>}
             <CategoryFilterBar
                 categories={categories}
-                onChange={(filters) => {
-                    // derive filteredTodos before rendering
-                }}
+                onChange={() => console.log("add filter logic")//setCategoryFilters
+                }
             />
 
             {todos.length !== 0 && <div style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>

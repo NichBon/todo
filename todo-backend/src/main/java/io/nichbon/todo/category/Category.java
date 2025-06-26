@@ -12,6 +12,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "categories")
@@ -33,9 +35,12 @@ public class Category {
     }
 
     @Column
+    @NotNull
+    @NotEmpty
     private String name;
 
     @Column
+    @NotNull
     private Color color;
 
     @ManyToMany(mappedBy = "categories")

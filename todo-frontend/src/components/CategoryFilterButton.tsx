@@ -14,7 +14,7 @@ const stateCycle: Record<FilterState, FilterState> = {
     exclude: 'none'
 };
 
-const bgColors: Record<FilterState, string> = {
+const borderColors: Record<FilterState, string> = {
     none: '#343a52',
     include: '#1e7a17',
     exclude: '#7a1717'
@@ -33,8 +33,8 @@ const CategoryFilterButton: React.FC<Props> = ({ category, onFilterChange }) => 
         <button
             onClick={handleClick}
             style={{
-                backgroundColor: bgColors[state],
-                border: '1px solid #ccc',
+                backgroundColor: category.color.toLowerCase(),
+                border: `3px solid ${borderColors[state]}`,
                 borderRadius: '50px',
                 padding: '6px 12px',
                 margin: '4px',
