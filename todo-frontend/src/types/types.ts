@@ -32,31 +32,57 @@ export type Todo = {
     categories: Category[];
 };
 
-export type UpdateTodo = {
-    id: string;
-}
 
-export type CreateTodoDTO = {
+export interface CreateTodoDTO {
     name: string;
     priority: string;
     status: CompletionStatus;
     categoryIds: string[];
+    archivedAt: string | null;
 }
+
+export interface UpdateTodoDTO extends CreateTodoDTO {
+    id: string;
+}
+
 
 export function toCreateTodoDTO(todo: Todo): CreateTodoDTO {
     return {
         name: todo.name,
         status: todo.status,
         priority: todo.priority,
+        archivedAt: todo.archivedAt,
         categoryIds: todo.categories.map(category => category.id)
     };
 }
+
+
+export function toUpdateTodoDTO(todo: Todo): UpdateTodoDTO {
+    return {
+        id: todo.id,
+        name: todo.name,
+        status: todo.status,
+        priority: todo.priority,
+        archivedAt: todo.archivedAt,
+        categoryIds: todo.categories.map(c => c.id)
+    }
+
+};
 
 export type Category = {
     id: string;
     name: string;
     color: Color;
     todos: Todo[];
+};
+
+export const areCategoriesEqual = (a: Category[], b: Category[]): boolean => {
+    const idsA = a.map(c => String(c.id)).sort();
+    const idsB = b.map(c => String(c.id)).sort();
+
+    if (idsA.length !== idsB.length) return false;
+
+    return idsA.every((id, index) => id === idsB[index]);
 };
 
 export interface CreateCategoryDTO {

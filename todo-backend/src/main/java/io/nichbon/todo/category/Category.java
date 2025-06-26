@@ -2,6 +2,8 @@ package io.nichbon.todo.category;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import io.nichbon.todo.todo.Todo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,6 +39,7 @@ public class Category {
     private Color color;
 
     @ManyToMany(mappedBy = "categories")
+    @JsonBackReference
     private List<Todo> todos;
 
     public String getName() {

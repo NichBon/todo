@@ -69,4 +69,13 @@ public class CategoryService {
         return updatedCategories;
     }
 
+    public String deleteById(long id) {
+        if (categoryRepository.existsById(id)) {
+            categoryRepository.deleteById(id);
+            return ("DELETED ID" + id);
+        } else {
+            return ("NO ID" + id + "to delete");
+        }
+    }
+
 }

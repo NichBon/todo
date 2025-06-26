@@ -1,0 +1,25 @@
+.category-toggle-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+
+  .category-button {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    background-color: transparent;
+    font-size: 0.95rem;
+
+    &.selected {
+      color: #000000;
+    }
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}

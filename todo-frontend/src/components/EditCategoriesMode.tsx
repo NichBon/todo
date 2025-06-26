@@ -75,9 +75,9 @@ const EditCategoriesMode: React.FC<Props> = ({ categories, onExit }) => {
                         </div>
                     ))}
 
-                    <button onClick={cancelEditMode}>Cancel</button>
-                    <button onClick={handleAddCategory}>Add Category</button>
-                    <button onClick={exitEditMode}>Apply Changes</button>
+                    <button onClick={cancelEditMode} style={{ margin: "0.5rem" }}>Cancel</button>
+                    <button onClick={handleAddCategory} style={{ margin: "0.5rem" }}>Add Category</button>
+                    <button onClick={exitEditMode} style={{ margin: "0.5rem" }}>Apply Changes</button>
                 </>
             )}
         </div>

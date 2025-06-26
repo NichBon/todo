@@ -52,9 +52,6 @@ public class Todo {
     private LocalDateTime archivedAt;
 
     @Column
-    private boolean isArchived;
-
-    @Column
     private CompletionStatus status;
 
     @ManyToMany()
@@ -91,14 +88,6 @@ public class Todo {
 
     public void setArchivedAt(LocalDateTime archivedAt) {
         this.archivedAt = archivedAt;
-    }
-
-    public boolean isArchived() {
-        return isArchived;
-    }
-
-    public void setArchived(boolean isArchived) {
-        this.isArchived = isArchived;
     }
 
     public CompletionStatus getStatus() {

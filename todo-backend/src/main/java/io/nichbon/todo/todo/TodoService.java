@@ -55,6 +55,11 @@ public class TodoService {
 
     public Todo updateById(UpdateTodoDTO data) {
         Todo foundTodo = findById(data.getId());
+        if (data.getCategoryIds() != null) {
+            Category[] categories = categoryService.findListByIds(List.of(data.getCategoryIds()))
+                    .toArray(new Category[0]);
+            foundTodo.setCategories(categories);
+        }
         this.modelMapper.map(data, foundTodo);
         this.todoRepository.save(foundTodo);
         return foundTodo;

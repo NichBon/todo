@@ -3,7 +3,7 @@ import ToDoColumn from './ToDoColumn';
 import { emptyBoard, type Category, type Columns, type Todo } from '../types/types';
 import { fetchCategories, fetchTodos } from '../services/dbservice.ts'
 import CategoryFilterBar, { type FilterState } from './CategoryFilterBar.tsx';
-import EditTodosMode from './EditTodosMode.tsx';
+import EditTodosMode from './EditTodosMode/EditTodosMode.tsx';
 import EditCategoriesMode from './EditCategoriesMode.tsx';
 
 
@@ -40,6 +40,15 @@ const BoardLayout = () => {
         }
         return newColumns;
     }
+
+    const areCategoriesEqual = (a: Category[], b: Category[]): boolean => {
+        const idsA = a.map(c => String(c.id)).sort();
+        const idsB = b.map(c => String(c.id)).sort();
+
+        if (idsA.length !== idsB.length) return false;
+
+        return idsA.every((id, index) => id === idsB[index]);
+    };
 
     useEffect(() => {
         // for dev server
@@ -102,7 +111,7 @@ const BoardLayout = () => {
             </div>}
 
             <EditCategoriesMode categories={categories} onExit={(updated) => setCategories(updated)}></EditCategoriesMode>
-            <EditTodosMode todos={todos} onExit={(updated) => setTodos(updated)}></EditTodosMode>
+            <EditTodosMode todos={todos} categories={categories} onExit={(updated) => setTodos(updated)}></EditTodosMode>
         </>
     );
 };

@@ -1,4 +1,4 @@
-import { type Category, type Todo, type UpdateTodo, type CreateTodoDTO, toCreateTodoDTO, toUpdateCategoryDTO, toCreateCategoryDTO, type UpdateCategoryDTO, type CreateCategoryDTO } from "../types/types";
+import { type Category, type Todo, type UpdateTodoDTO, type CreateTodoDTO, toCreateTodoDTO, toUpdateCategoryDTO, toCreateCategoryDTO, type UpdateCategoryDTO, type CreateCategoryDTO, toUpdateTodoDTO } from "../types/types";
 
 const BASE_URL: string = 'http://localhost:8080'
 
@@ -28,13 +28,16 @@ export async function fetchCategories(): Promise<Category[]> {
 
 export async function batchUpdateTodos(todos: Todo[]): Promise<Todo[]> {
 
-    const patchTodos: UpdateTodo[] = todos
-        .filter((todo) => !todo.id.toString().startsWith('temp-'));
-
+    const patchTodos: UpdateTodoDTO[] = todos
+        .filter((todo) => !todo.id.toString().startsWith('temp-'))
+        .map((todo) => toUpdateTodoDTO(todo));
+    console.log("patchtodos")
+    console.log(patchTodos)
     const postTodos: CreateTodoDTO[] = todos
         .filter((todo) => todo.id.toString().startsWith('temp-'))
         .map((todo) => toCreateTodoDTO(todo));
-
+    console.log("posttodos")
+    console.log(postTodos)
     const patchResponse = await fetch(`${BASE_URL}/todos/batch`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -60,6 +63,7 @@ export async function batchUpdateTodos(todos: Todo[]): Promise<Todo[]> {
 }
 
 export async function batchUpdateCategories(categories: Category[]): Promise<Category[]> {
+    console.log(categories)
     const patchCategories: UpdateCategoryDTO[] = categories
         .filter(category => !category.id.toString().startsWith('temp-'))
         .map(toUpdateCategoryDTO);

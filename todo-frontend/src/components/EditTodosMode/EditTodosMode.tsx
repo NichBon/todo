@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
-import { batchUpdateTodos } from '../services/dbservice';
-import type { CompletionStatus, Todo } from '../types/types';
-import { formatDate } from '../services/dateService';
+import { batchUpdateTodos } from '../../services/dbservice';
+import { areCategoriesEqual, type Category, type Todo } from '../../types/types';
+import { formatDate } from '../../services/dateService';
+import { CategoryToggleButtons } from '../CategoryToggleButtons/CategoryToggleButtons';
+
+import './EditTodosMode.scss';
 
 type Props = {
     todos: Todo[];
+    categories: Category[];
     onExit: (updated: Todo[]) => void;
 };
 
-const EditTodosMode: React.FC<Props> = ({ todos, onExit }) => {
+const EditTodosMode: React.FC<Props> = ({ todos, categories, onExit }) => {
 
     const [editMode, setEditMode] = useState(false);
     const [changedTodos, setChangedTodos] = useState<Todo[]>([]);
@@ -30,7 +34,8 @@ const EditTodosMode: React.FC<Props> = ({ todos, onExit }) => {
             return (
                 todo.name !== original.name ||
                 todo.status !== original.status ||
-                todo.archivedAt !== original.archivedAt
+                todo.archivedAt !== original.archivedAt ||
+                !areCategoriesEqual(todo.categories, original.categories)
             );
         });
 
@@ -62,9 +67,8 @@ const EditTodosMode: React.FC<Props> = ({ todos, onExit }) => {
         setChangedTodos(prev => [...prev, newTodo]);
     }
 
-
     return (
-        <div>
+        <div className="edit-todos-container">
             {!editMode && <button onClick={() => setEditMode(true)}>
                 {'Edit Todos'}
             </button>}
@@ -78,6 +82,7 @@ const EditTodosMode: React.FC<Props> = ({ todos, onExit }) => {
                                 onChange={e => updateField(todo.id, 'name', e.target.value)}
                                 style={{ marginRight: '0.5rem' }}
                             />
+
                             <select
                                 value={todo.status}
                                 onChange={e =>
@@ -90,6 +95,7 @@ const EditTodosMode: React.FC<Props> = ({ todos, onExit }) => {
                                 <option value="COMPLETED">Completed</option>
                                 <option value="ON_HOLD">On Hold</option>
                             </select>
+
                             <select
                                 value={todo.priority}
                                 onChange={e =>
@@ -101,18 +107,31 @@ const EditTodosMode: React.FC<Props> = ({ todos, onExit }) => {
                                 <option value="MEDIUM">Medium</option>
                                 <option value="HIGH">High</option>
                             </select>
-                            <button
-                                style={{ marginLeft: '1rem', width: "80px" }}
-                                onClick={() => updateField(todo.id, 'archivedAt', todo.archivedAt ? null : formatDate(new Date))}
-                            >
-                                {todo.archivedAt ? 'Unarchive' : 'Archive'}
-                            </button>
+
+                            <label className="archive-checkbox">
+                                <span>Archived</span>
+                                <input
+                                    type="checkbox"
+                                    checked={todo.archivedAt ? true : false}
+                                    onChange={() => updateField(todo.id, 'archivedAt', todo.archivedAt ? null : formatDate(new Date))}
+                                />
+                            </label>
+
+                            <CategoryToggleButtons
+                                selected={todo.categories}
+                                allCategories={categories}
+                                onToggle={updated => {
+                                    console.log('Updating todo', todo.id, 'with categories', updated.map(c => c.id));
+                                    updateField(todo.id, 'categories', updated)
+                                }}
+                            />
+
                         </div>
                     ))}
 
-                    <button onClick={cancelEditMode}>Cancel</button>
-                    <button onClick={handleAddTodo}>Add Todo</button>
-                    <button onClick={exitEditMode}>Apply Changes</button>
+                    <button onClick={cancelEditMode} style={{ margin: "0.5rem" }}>Cancel</button>
+                    <button onClick={handleAddTodo} style={{ margin: "0.5rem" }}>Add Todo</button>
+                    <button onClick={exitEditMode} style={{ margin: "0.5rem" }}>Apply Changes</button>
                 </>
             )}
         </div>
@@ -122,3 +141,25 @@ const EditTodosMode: React.FC<Props> = ({ todos, onExit }) => {
 export default EditTodosMode
 
 
+{/* <select
+                                multiple
+                                value={todo.categories.map(category => String(category.id))}
+                                onChange={e => {
+                                    const selectedOptions = Array.from(e.target.selectedOptions).map(opt => String(opt.value));
+                                    const selectedCategories = categories.filter(category => selectedOptions.includes(String(category.id)));
+                                    updateField(todo.id, 'categories', selectedCategories);
+                                }}
+                                style={{ marginRight: '0.5rem' }}
+                            >
+                                {categories.map(category => (
+                                    <option key={category.id} value={String(category.id)}>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </select> */}
+{/* <button
+                                style={{ marginLeft: '1rem', width: "80px" }}
+                                onClick={() => updateField(todo.id, 'archivedAt', todo.archivedAt ? null : formatDate(new Date))}
+                            >
+                                {todo.archivedAt ? 'Unarchive' : 'Archive'}
+                            </button> */}

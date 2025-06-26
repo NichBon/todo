@@ -6,20 +6,20 @@ export type FilterState = 'include' | 'exclude' | 'none';
 
 type Props = {
     categories: Category[];
-    onChange: (filters: Record<number, FilterState>) => void;
+    onChange: (filters: Record<string, FilterState>) => void;
 };
 
 const CategoryFilterBar: React.FC<Props> = ({ categories, onChange }) => {
-    const [filters, setFilters] = useState<Record<number, FilterState>>({});
+    const [filters, setFilters] = useState<Record<string, FilterState>>({});
 
-    const handleFilterChange = (categoryId: number, newState: FilterState) => {
+    const handleFilterChange = (categoryId: string, newState: FilterState) => {
         const next = { ...filters, [categoryId]: newState };
         setFilters(next);
         onChange(next);
     };
 
     const resetFilters = () => {
-        const cleared = categories.reduce<Record<number, FilterState>>((acc, cat) => {
+        const cleared = categories.reduce<Record<string, FilterState>>((acc, cat) => {
             acc[cat.id] = 'none';
             return acc;
         }, {});

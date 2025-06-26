@@ -1,7 +1,6 @@
 package io.nichbon.todo.todo.dtos;
 
 import java.sql.Date;
-
 import io.nichbon.todo.todo.Todo.CompletionStatus;
 import io.nichbon.todo.todo.Todo.Priority;
 import jakarta.validation.constraints.NotNull;
@@ -21,17 +20,17 @@ public class UpdateTodoDTO {
 
     private Date archivedAt;
 
-    private boolean isArchived;
+    private Long[] categoryIds;
 
-    public UpdateTodoDTO(@NotNull long id, String name, CompletionStatus status, Priority priority, Date createdAt,
-            Date archivedAt, boolean isArchived) {
+    public UpdateTodoDTO(@NotNull Long id, String name, CompletionStatus status, Priority priority, Date createdAt,
+            Date archivedAt, Long[] categoryIds) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.priority = priority;
         this.createdAt = createdAt;
         this.archivedAt = archivedAt;
-        this.isArchived = isArchived;
+        this.categoryIds = categoryIds;
     }
 
     public Date getCreatedAt() {
@@ -40,10 +39,6 @@ public class UpdateTodoDTO {
 
     public Date getArchivedAt() {
         return archivedAt;
-    }
-
-    public boolean isArchived() {
-        return isArchived;
     }
 
     public String getName() {
@@ -60,5 +55,9 @@ public class UpdateTodoDTO {
 
     public long getId() {
         return id;
+    }
+
+    public Long[] getCategoryIds() {
+        return categoryIds;
     }
 }

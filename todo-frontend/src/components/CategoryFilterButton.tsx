@@ -5,7 +5,7 @@ type FilterState = 'include' | 'exclude' | 'none';
 
 type Props = {
     category: Category;
-    onFilterChange: (categoryId: number, newState: FilterState) => void;
+    onFilterChange: (categoryId: string, newState: FilterState) => void;
 };
 
 const stateCycle: Record<FilterState, FilterState> = {

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.nichbon.todo.category.dtos.CreateCategoryDTO;
 import io.nichbon.todo.category.dtos.UpdateCategoryDTO;
 import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,6 +66,12 @@ public class CategoryController {
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable long id) {
+        String deleted = this.categoryService.deleteById(id);
+        return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 
 }
