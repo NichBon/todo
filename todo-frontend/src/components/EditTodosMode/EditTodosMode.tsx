@@ -35,7 +35,8 @@ const EditTodosMode: React.FC<Props> = ({ todos, categories, onExit }) => {
                 todo.name !== original.name ||
                 todo.status !== original.status ||
                 todo.archivedAt !== original.archivedAt ||
-                !areCategoriesEqual(todo.categories, original.categories)
+                !areCategoriesEqual(todo.categories, original.categories) ||
+                todo.priority !== original.priority
             );
         });
 

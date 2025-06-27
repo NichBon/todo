@@ -10,10 +10,10 @@ export type CompletionStatus =
     | 'IN_PROGRESS';
 
 export const columnIdToStatus: Record<string, CompletionStatus> = {
-    TODO: 'TO_DO',
+    TO_DO: 'TO_DO',
     IN_PROGRESS: 'IN_PROGRESS',
     ON_HOLD: 'ON_HOLD',
-    DONE: 'COMPLETED'
+    COMPLETED: 'COMPLETED'
 };
 
 export const COLORS = [
