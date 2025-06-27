@@ -9,6 +9,13 @@ export type CompletionStatus =
     | 'TO_DO'
     | 'IN_PROGRESS';
 
+export const columnIdToStatus: Record<string, CompletionStatus> = {
+    TODO: 'TO_DO',
+    IN_PROGRESS: 'IN_PROGRESS',
+    ON_HOLD: 'ON_HOLD',
+    DONE: 'COMPLETED'
+};
+
 export const COLORS = [
     'RED',
     'BLUE',
@@ -120,19 +127,19 @@ export type ColumnData = {
 export type Columns = Record<string, ColumnData>;
 
 export const emptyBoard: Columns = {
-    'todo': {
+    'TO_DO': {
         name: 'To Do',
         items: []
     },
-    'on-hold': {
+    'ON_HOLD': {
         name: "On Hold",
         items: []
     },
-    'in-progress': {
+    'IN_PROGRESS': {
         name: 'In Progress',
         items: []
     },
-    'done': {
+    'DONE': {
         name: 'Done',
         items: []
     }

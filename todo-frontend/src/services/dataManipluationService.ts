@@ -5,19 +5,19 @@ export const sortColumns = (todos: Todo[]) => {
     for (const todo of todos) {
         switch (todo.status) {
             case 'TO_DO':
-                newColumns['todo'].items.push(todo);
+                newColumns['TO_DO'].items.push(todo);
                 break;
 
             case 'IN_PROGRESS':
-                newColumns['in-progress'].items.push(todo);
+                newColumns['IN_PROGRESS'].items.push(todo);
                 break;
 
             case 'COMPLETED':
-                newColumns['done'].items.push(todo);
+                newColumns['DONE'].items.push(todo);
                 break;
 
             case 'ON_HOLD':
-                newColumns['on-hold'].items.push(todo);
+                newColumns['ON_HOLD'].items.push(todo);
                 break;
         }
     }

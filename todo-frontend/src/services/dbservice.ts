@@ -32,6 +32,7 @@ export async function batchUpdateTodos(todos: Todo[]): Promise<Todo[]> {
     const postTodos: CreateTodoDTO[] = todos
         .filter((todo) => todo.id.toString().startsWith('temp-'))
         .map((todo) => toCreateTodoDTO(todo));
+
     const patchResponse = await fetch(`${BASE_URL}/todos/batch`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -53,6 +54,17 @@ export async function batchUpdateTodos(todos: Todo[]): Promise<Todo[]> {
 
     const data = patchData.concat(postData);
     console.log(data)
+    return data;
+}
+
+export async function updateTodo(todo: Todo): Promise<Todo> {
+    const response = await fetch(`${BASE_URL}/todos`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(todo)
+    });
+
+    const data: Todo = await response.json();
     return data;
 }
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import ToDoColumn from './ToDoColumn';
-import { emptyBoard, type Category, type Columns, type Todo } from '../types/types';
-import { fetchCategories, fetchTodos } from '../services/dbservice.ts'
+import { columnIdToStatus, emptyBoard, type Category, type Columns, type Todo } from '../types/types';
+import { fetchCategories, fetchTodos, updateTodo } from '../services/dbservice.ts'
 import CategoryFilterBar, { type FilterState } from './CategoryFilterBar.tsx';
 import EditTodosMode from './EditTodosMode/EditTodosMode.tsx';
 import EditCategoriesMode from './EditCategoriesMode.tsx';
@@ -57,6 +57,9 @@ const BoardLayout = () => {
         if (movedItem) {
             newColumns[destinationColId].items.push(movedItem);
             setColumns(newColumns);
+            movedItem.status = columnIdToStatus[destinationColId];
+            updateTodo(movedItem)
+
         }
     };
 
