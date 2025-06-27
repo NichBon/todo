@@ -27,6 +27,17 @@ export const COLORS = [
     'CYAN'
 ] as const;
 
+export const CATEGORY_TEXT_COLOR: Record<string, string> = {
+    'RED': 'white',
+    'BLUE': 'white',
+    'PURPLE': 'white',
+    'GREEN': 'white',
+    'YELLOW': '#20202b',
+    'ORANGE': '#20202b',
+    'GREY': 'black',
+    'CYAN': 'black'
+};
+
 export type Color = typeof COLORS[number]
 
 export type Todo = {

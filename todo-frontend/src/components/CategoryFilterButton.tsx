@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import type { Category } from '../types/types';
+import { CATEGORY_TEXT_COLOR, type Category } from '../types/types';
 
 type FilterState = 'include' | 'exclude' | 'none';
 
 type Props = {
     category: Category;
+    filterState: FilterState;
     onFilterChange: (categoryId: string, newState: FilterState) => void;
 };
 
@@ -20,12 +20,10 @@ const borderColors: Record<FilterState, string> = {
     exclude: '#7a1717'
 };
 
-const CategoryFilterButton: React.FC<Props> = ({ category, onFilterChange }) => {
-    const [state, setState] = useState<FilterState>('none');
+const CategoryFilterButton: React.FC<Props> = ({ category, filterState, onFilterChange }) => {
 
     const handleClick = () => {
-        const nextState = stateCycle[state];
-        setState(nextState);
+        const nextState = stateCycle[filterState];
         onFilterChange(category.id, nextState);
     };
 
@@ -34,15 +32,17 @@ const CategoryFilterButton: React.FC<Props> = ({ category, onFilterChange }) => 
             onClick={handleClick}
             style={{
                 backgroundColor: category.color.toLowerCase(),
-                border: `3px solid ${borderColors[state]}`,
+                border: `3px solid ${borderColors[filterState]}`,
                 borderRadius: '50px',
                 padding: '6px 12px',
                 margin: '4px',
                 cursor: 'pointer',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                opacity: `${filterState === 'none' ? 0.6 : 1}`,
+                color: `${CATEGORY_TEXT_COLOR[category.color] || 'white'}`
             }}
         >
-            {category.name} {state !== 'none' ? `(${state})` : ''}
+            {category.name} {filterState !== 'none' ? `(${filterState})` : ''}
         </button>
     );
 };

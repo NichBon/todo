@@ -36,6 +36,7 @@ const TodoItem: React.FC<Props> = ({ todo }) => {
                     marginBottom: 8,
                     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                     cursor: 'grab',
+                    opacity: `${todo.archivedAt ? 0.6 : 1}`
                 }}
             >
                 {todo.name}

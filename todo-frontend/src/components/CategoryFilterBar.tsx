@@ -34,6 +34,7 @@ const CategoryFilterBar: React.FC<Props> = ({ categories, onChange }) => {
                 <CategoryFilterButton
                     key={category.id}
                     category={category}
+                    filterState={filters[category.id] ?? 'none'}
                     onFilterChange={handleFilterChange}
                 />
             ))}

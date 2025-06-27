@@ -14,7 +14,15 @@ const BoardLayout = () => {
     const [error, setError] = useState<string | null>(null);
     const [columns, setColumns] = useState<Columns>({});
     const [categories, setCategories] = useState<Category[]>([])
-    // for dev server
+
+    // filters
+    const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
+    const [showArchivedFilter, setShowArchivedFilter] = useState<boolean>(false);
+    const [categoryFilters, setCategoryFilters] = useState<Record<string, FilterState>>({});
+
+
+
+    // for dev servera
     const didFetch = useRef(false);
 
     useEffect(() => {
@@ -38,9 +46,29 @@ const BoardLayout = () => {
     }, []);
 
     useEffect(() => {
-        const newColumns = sortColumns(todos);
+        const filteredTodos = todos.filter(todo => {
+            const categoryIds = todo.categories.map(cat => cat.id.toString());
+
+            const include = Object.entries(categoryFilters)
+                .filter(([, state]) => state === "include")
+                .map((([id]) => id));
+
+            const exclude = Object.entries(categoryFilters)
+                .filter(([, state]) => state === "exclude")
+                .map((([id]) => id));
+
+            const matchesCategories = (
+                include.length === 0
+                || include.every(id => categoryIds.includes(id))
+                && !exclude.some(id => categoryIds.includes(id))
+            )
+
+            return matchesCategories
+        })
+
+        const newColumns = sortColumns(filteredTodos);
         setColumns(newColumns);
-    }, [todos])
+    }, [todos, categoryFilters])
 
     const handleDrop = (todoId: string, destinationColId: string) => {
         const newColumns: Columns = { ...columns };
@@ -63,14 +91,17 @@ const BoardLayout = () => {
         }
     };
 
+    const handleCategoryFilterChange = (newFilters: Record<string, FilterState>) => {
+        setCategoryFilters(newFilters);
+    };
+
     return (
         <>
             {loading === true && <div>Loading...</div>}
             {error !== null && <p>Error: {error}</p>}
             <CategoryFilterBar
                 categories={categories}
-                onChange={() => console.log("add filter logic")//setCategoryFilters
-                }
+                onChange={handleCategoryFilterChange}
             />
 
             {todos.length !== 0 && <div style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
