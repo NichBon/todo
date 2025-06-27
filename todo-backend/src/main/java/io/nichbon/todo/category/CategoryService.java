@@ -1,5 +1,6 @@
 package io.nichbon.todo.category;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +28,14 @@ public class CategoryService {
         return savedCategory;
     }
 
-    public Category[] batchCreate(CreateCategoryDTO[] data) {
-        Category[] createdCategories = new Category[data.length];
-        for (int i = 0; i < data.length; i++) {
-            createdCategories[i] = create(data[i]);
-        }
+    public List<Category> batchCreate(CreateCategoryDTO[] data) {
+        List<Category> Categories = Arrays.stream(data)
+                .map(dto -> {
+                    Category newCategory = modelMapper.map(dto, Category.class);
+                    return newCategory;
+                }).toList();
+
+        List<Category> createdCategories = categoryRepository.saveAll(Categories);
         return createdCategories;
     }
 
@@ -61,12 +65,20 @@ public class CategoryService {
         return foundCategory;
     }
 
-    public Category[] batchUpdate(UpdateCategoryDTO[] data) {
-        Category[] updatedCategories = new Category[data.length];
-        for (int i = 0; i < data.length; i++) {
-            updatedCategories[i] = updateById(data[i]);
-        }
-        return updatedCategories;
+    public List<Category> batchUpdate(UpdateCategoryDTO[] data) {
+        List<Category> Categories = Arrays.stream(data)
+                .map(dto -> {
+                    Category newCategory = modelMapper.map(dto, Category.class);
+                    return newCategory;
+                }).toList();
+        List<Category> createdCategories = categoryRepository.saveAll(Categories);
+        return createdCategories;
+
+        // Category[] updatedCategories = new Category[data.length];
+        // for (int i = 0; i < data.length; i++) {
+        // updatedCategories[i] = updateById(data[i]);
+        // }
+        // return updatedCategories;
     }
 
     public String deleteById(long id) {

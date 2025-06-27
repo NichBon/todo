@@ -35,8 +35,8 @@ public class CategoryController {
     }
 
     @PostMapping("/batch")
-    public ResponseEntity<Category[]> batchCreateTodos(@Valid @RequestBody CreateCategoryDTO[] data) {
-        Category[] saved = this.categoryService.batchCreate(data);
+    public ResponseEntity<List<Category>> batchCreateTodos(@Valid @RequestBody CreateCategoryDTO[] data) {
+        List<Category> saved = this.categoryService.batchCreate(data);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
@@ -61,7 +61,7 @@ public class CategoryController {
     @PatchMapping("/batch")
     public ResponseEntity<?> batchUpdate(@Valid @RequestBody UpdateCategoryDTO[] data) {
         try {
-            Category[] categories = this.categoryService.batchUpdate(data);
+            List<Category> categories = this.categoryService.batchUpdate(data);
             return new ResponseEntity<>(categories, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);

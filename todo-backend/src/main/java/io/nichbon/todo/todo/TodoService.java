@@ -1,6 +1,7 @@
 package io.nichbon.todo.todo;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -45,12 +46,27 @@ public class TodoService {
         return savedTodo;
     }
 
-    public Todo[] batchCreate(CreateTodoDTO[] data) {
-        Todo[] createdTodos = new Todo[data.length];
-        for (int i = 0; i < data.length; i++) {
-            createdTodos[i] = create(data[i]);
-        }
+    public List<Todo> batchCreate(CreateTodoDTO[] data) {
+        List<Todo> todos = Arrays.stream(data)
+                .map(dto -> {
+                    Todo newTodo = modelMapper.map(dto, Todo.class);
+
+                    newTodo.setCreatedAt(LocalDateTime.now());
+
+                    List<Category> linkedCategories = categoryService.findListByIds(dto.getCategoryIds());
+                    newTodo.setCategories(linkedCategories.toArray(new Category[0]));
+
+                    return newTodo;
+                }).toList();
+
+        List<Todo> createdTodos = todoRepository.saveAll(todos);
         return createdTodos;
+
+        // Todo[] createdTodos = new Todo[data.length];
+        // for (int i = 0; i < data.length; i++) {
+        // createdTodos[i] = create(data[i]);
+        // }
+        // return createdTodos;
     }
 
     public Todo updateById(UpdateTodoDTO data) {
@@ -65,11 +81,21 @@ public class TodoService {
         return foundTodo;
     }
 
-    public Todo[] batchUpdate(UpdateTodoDTO[] data) {
-        Todo[] updatedTodos = new Todo[data.length];
-        for (int i = 0; i < data.length; i++) {
-            updatedTodos[i] = updateById(data[i]);
-        }
+    public List<Todo> batchUpdate(UpdateTodoDTO[] data) {
+        List<Todo> todos = Arrays.stream(data)
+                .map(dto -> {
+                    Todo foundTodo = findById(dto.getId());
+                    if (dto.getCategoryIds() != null) {
+                        Category[] categories = categoryService.findListByIds(List.of(dto.getCategoryIds()))
+                                .toArray(new Category[0]);
+                        foundTodo.setCategories(categories);
+                    }
+                    this.modelMapper.map(dto, foundTodo);
+                    this.todoRepository.save(foundTodo);
+                    return foundTodo;
+                }).toList();
+
+        List<Todo> updatedTodos = todoRepository.saveAll(todos);
         return updatedTodos;
     }
 

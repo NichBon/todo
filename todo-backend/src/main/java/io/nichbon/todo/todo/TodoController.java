@@ -51,8 +51,8 @@ public class TodoController {
     }
 
     @PostMapping("/batch")
-    public ResponseEntity<Todo[]> batchCreateTodos(@Valid @RequestBody CreateTodoDTO[] data) {
-        Todo[] saved = this.todoService.batchCreate(data);
+    public ResponseEntity<List<Todo>> batchCreateTodos(@Valid @RequestBody CreateTodoDTO[] data) {
+        List<Todo> saved = this.todoService.batchCreate(data);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
@@ -75,7 +75,7 @@ public class TodoController {
     @PatchMapping("/batch")
     public ResponseEntity<?> batchUpdate(@Valid @RequestBody UpdateTodoDTO[] data) {
         try {
-            Todo[] todos = this.todoService.batchUpdate(data);
+            List<Todo> todos = this.todoService.batchUpdate(data);
             return new ResponseEntity<>(todos, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
