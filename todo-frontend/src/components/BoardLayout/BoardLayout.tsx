@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import ToDoColumn from './ToDoColumn';
-import { columnIdToStatus, emptyBoard, type Category, type Columns, type Todo } from '../types/types';
-import { fetchCategories, fetchTodos, updateTodo } from '../services/dbservice.ts'
-import CategoryFilterBar, { type FilterState } from './CategoryFilterBar.tsx';
-import EditTodosMode from './EditTodosMode/EditTodosMode.tsx';
-import EditCategoriesMode from './EditCategoriesMode.tsx';
-import { sortColumns } from '../services/dataManipluationService.ts';
+import ToDoColumn from '../ToDoColumn.tsx';
+import { columnIdToStatus, emptyBoard, type Category, type Columns, type Todo } from '../../types/types.ts';
+import { fetchCategories, fetchTodos, updateTodo } from '../../services/dbservice.ts'
+import CategoryFilterBar, { type FilterState } from '../CategoryFilterBar.tsx';
+import EditTodosMode from '../EditTodosMode/EditTodosMode.tsx';
+import EditCategoriesMode from '../EditCategoriesMode.tsx';
+import { sortColumns } from '../../services/dataManipluationService.ts';
+import './BoardLayout.scss'
 
 
 const BoardLayout = () => {
@@ -20,10 +21,30 @@ const BoardLayout = () => {
     const [showArchivedFilter, setShowArchivedFilter] = useState<boolean>(false);
     const [categoryFilters, setCategoryFilters] = useState<Record<string, FilterState>>({});
 
+    // Modal
+    const [isOpen, setIsOpen] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const modalRef = useRef<HTMLDivElement>(null);
+    const dirtyTodos = useRef<Todo[]>([]);
+    const todosAreDirty = useRef<boolean>(false);
 
-
-    // for dev servera
+    // for dev server
     const didFetch = useRef(false);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                isOpen &&
+                modalRef.current &&
+                !modalRef.current.contains(event.target as Node)
+            ) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [isOpen]);
 
     useEffect(() => {
         // for dev server
@@ -70,7 +91,7 @@ const BoardLayout = () => {
         setColumns(newColumns);
     }, [todos, categoryFilters])
 
-    const handleDrop = (todoId: string, destinationColId: string) => {
+    const handleDrop = (todoId: number, destinationColId: string) => {
         const newColumns: Columns = { ...columns };
         let movedItem;
 
@@ -95,8 +116,56 @@ const BoardLayout = () => {
         setCategoryFilters(newFilters);
     };
 
+    const handleTodoClick = (clickedTodo: Todo) => {
+        const index = todos.findIndex(t => t.id === clickedTodo.id);
+        if (index !== -1) {
+            setCurrentIndex(index);
+            setIsOpen(true);
+        }
+    };
+
+    const handleModalUpdate = (updated: Todo[]) => {
+        setTodos(updated);
+        setIsOpen(false);
+        dirtyTodos.current = [];
+        todosAreDirty.current = false;
+    }
+
+    const handleModalDiscard = () => {
+        setIsOpen(false);
+        dirtyTodos.current = [];
+        todosAreDirty.current = false;
+    };
+
+    const handleModalHide = () => {
+        setIsOpen(false);
+    }
+
+    const modalTodoChange = (updated: Todo[], isDirty: boolean) => {
+        dirtyTodos.current = updated;
+        todosAreDirty.current = isDirty;
+    }
+
     return (
         <>
+            {isOpen && (
+                <div className="modal-edit-todo">
+                    <div className="modal-content" ref={modalRef}>
+                        <EditTodosMode
+                            todos={dirtyTodos.current.length === 0 ? todos : dirtyTodos.current}
+                            categories={categories}
+                            onTodoChange={modalTodoChange}
+                            onExit={handleModalUpdate}
+                            onCancel={handleModalDiscard}
+                            onHide={handleModalHide}
+                            clickedIndex={currentIndex}
+                            wasDirty={todosAreDirty.current}
+                        >
+                        </EditTodosMode>
+                    </div>
+                </div>
+            )}
+
             {loading === true && <div>Loading...</div>}
             {error !== null && <p>Error: {error}</p>}
             <CategoryFilterBar
@@ -106,12 +175,11 @@ const BoardLayout = () => {
 
             {todos.length !== 0 && <div style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
                 {Object.entries(columns).map(([id, column]) => (
-                    <ToDoColumn key={id} columnId={id} column={column} onDrop={handleDrop} />
+                    <ToDoColumn key={id} columnId={id} column={column} onDrop={handleDrop} onTodoClick={handleTodoClick} />
                 ))}
             </div>}
 
             <EditCategoriesMode categories={categories} onExit={(updated) => setCategories(updated)}></EditCategoriesMode>
-            <EditTodosMode todos={todos} categories={categories} onExit={(updated) => setTodos(updated)}></EditTodosMode>
         </>
     );
 };

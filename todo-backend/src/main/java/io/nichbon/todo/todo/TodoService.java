@@ -91,7 +91,7 @@ public class TodoService {
                         foundTodo.setCategories(categories);
                     }
                     this.modelMapper.map(dto, foundTodo);
-                    this.todoRepository.save(foundTodo);
+                    foundTodo.setArchivedAt(dto.getArchivedAt());
                     return foundTodo;
                 }).toList();
 
@@ -112,6 +112,35 @@ public class TodoService {
         this.todoRepository.save(foundTodo);
 
         return foundTodo;
+    }
+
+    public List<Todo> batchPut(UpdateTodoDTO[] data) {
+        List<Todo> todos = Arrays.stream(data)
+                .map(dto -> {
+                    if (dto.getId() >= 0) {
+                        Todo foundTodo = findById(dto.getId());
+                        if (dto.getCategoryIds() != null) {
+                            Category[] categories = categoryService.findListByIds(List.of(dto.getCategoryIds()))
+                                    .toArray(new Category[0]);
+                            foundTodo.setCategories(categories);
+                        }
+                        this.modelMapper.map(dto, foundTodo);
+                        foundTodo.setArchivedAt(dto.getArchivedAt());
+                        return foundTodo;
+                    } else {
+                        System.out.println(dto);
+                        Todo newTodo = modelMapper.map(dto, Todo.class);
+                        newTodo.setCreatedAt(LocalDateTime.now());
+                        List<Category> linkedCategories = categoryService.findListByIds(List.of(dto.getCategoryIds()));
+                        newTodo.setCategories(linkedCategories.toArray(new Category[0]));
+                        newTodo.setId(null);
+                        return newTodo;
+                    }
+                }).toList();
+
+        List<Todo> updatedTodos = todoRepository.saveAll(todos);
+        return updatedTodos;
+
     }
 
 }

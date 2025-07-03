@@ -14,6 +14,7 @@ public class ModelMapperConfig {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setSkipNullEnabled(true);
         modelMapper.typeMap(String.class, String.class).setConverter(new StringTrimConverter());
+
         return modelMapper;
     }
 

@@ -1,35 +1,68 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { batchUpdateTodos } from '../../services/dbservice';
 import { areCategoriesEqual, type Category, type Todo } from '../../types/types';
 import { formatDate } from '../../services/dateService';
-import { CategoryToggleButtons } from '../CategoryToggleButtons/CategoryToggleButtons';
+import classes from './EditTodosMode.module.scss';
 
-import './EditTodosMode.scss';
+import EditTodoForm from '../EditToDoForm/EditTodoForm';
 
 type Props = {
     todos: Todo[];
     categories: Category[];
     onExit: (updated: Todo[]) => void;
+    onCancel: () => void;
+    clickedIndex?: number;
+    onHide: () => void;
+    wasDirty: boolean;
+    onTodoChange: (changedTodos: Todo[], isDirty: boolean) => void;
 };
 
-const EditTodosMode: React.FC<Props> = ({ todos, categories, onExit }) => {
+const EditTodosMode: React.FC<Props> = ({
+    todos,
+    categories,
+    onExit,
+    onCancel,
+    clickedIndex,
+    wasDirty,
+    onHide,
+    onTodoChange
+}) => {
 
-    const [editMode, setEditMode] = useState(false);
     const [changedTodos, setChangedTodos] = useState<Todo[]>([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [confirmingCancel, setConfirmingCancel] = useState(false);
+    const modalRef = useRef<HTMLDivElement>(null);
+    const currentTodo = changedTodos[currentIndex];
+    const isDirty = useRef(wasDirty)
+
+    const updateCurrentField = (field: keyof Todo, value: any) => {
+        if (!isDirty.current) isDirty.current = true;
+        setChangedTodos(prev => {
+            const updated = prev.map((todo, i) =>
+                i === currentIndex ? { ...todo, [field]: value } : todo
+            )
+
+            onTodoChange(updated, isDirty.current);
+
+            return updated;
+        }
+        );
+    };
 
     useEffect(() => {
         setChangedTodos(structuredClone(todos));
     }, [todos])
 
-    const updateField = (id: string, field: keyof Todo, value: any) => {
-        setChangedTodos(prev =>
-            prev.map(todo => (todo.id === id ? { ...todo, [field]: value } : todo))
-        );
-    };
+    useEffect(() => {
+        setChangedTodos(structuredClone(todos));
+        if (clickedIndex !== undefined) {
+            setCurrentIndex(clickedIndex);
+        }
+    }, [todos, clickedIndex]);
 
-    const exitEditMode = async () => {
+    const handleApplyChanges = async () => {
         const updates = changedTodos.filter((todo, id) => {
-            if (todo.id.toString().startsWith('temp-')) return true;
+            if (todo.id < 0) return true;
             const original = todos[id];
             return (
                 todo.name !== original.name ||
@@ -40,23 +73,37 @@ const EditTodosMode: React.FC<Props> = ({ todos, categories, onExit }) => {
             );
         });
 
-        console.log("from edit mode")
-        console.log(updates)
-
-        const updateConfirmation = await batchUpdateTodos(updates)
-        console.log(updateConfirmation)
-
-        setEditMode(false);
+        await batchUpdateTodos(updates)
         onExit(changedTodos);
     };
 
-    const cancelEditMode = () => {
-        setEditMode(false);
+    const handleHide = () => {
+        onHide();
     }
 
+    const handleCancel = () => {
+        if (isDirty.current === true) {
+            setConfirmingCancel(true);
+        } else {
+            onCancel();
+        }
+    }
+
+    const handleConfirmCancel = () => {
+        setConfirmingCancel(false);
+        onCancel();
+    };
+
+    const handleCancelBack = () => {
+        setConfirmingCancel(false);
+    };
+
     const handleAddTodo = () => {
+        const newId = (changedTodos[changedTodos.length - 1].id < 0) ?
+            changedTodos[changedTodos.length - 1].id - 1
+            : -1;
         const newTodo: Todo = {
-            id: `temp-${crypto.randomUUID()}`,
+            id: newId,
             name: "",
             priority: "LOW",
             createdAt: formatDate(new Date),
@@ -66,101 +113,68 @@ const EditTodosMode: React.FC<Props> = ({ todos, categories, onExit }) => {
         }
 
         setChangedTodos(prev => [...prev, newTodo]);
+        setCurrentIndex(changedTodos.length)
     }
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                modalRef.current &&
+                !modalRef.current.contains(event.target as Node)
+            ) {
+                onHide();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [handleCancel]);
+
+
     return (
-        <div className="edit-todos-container">
-            {!editMode && <button onClick={() => setEditMode(true)}>
-                {'Edit Todos'}
-            </button>}
-            {editMode && (
-                <>
+        <div className={classes.editTodosContainer}>
 
-                    {changedTodos.map((todo) => (
-                        <div key={todo.id} style={{ margin: '0.5rem 0' }}>
-                            <input
-                                value={todo.name}
-                                onChange={e => updateField(todo.id, 'name', e.target.value)}
-                                style={{ marginRight: '0.5rem' }}
-                            />
+            <div className={classes.navControls}>
+                <span className={classes.navButton} onClick={() => setCurrentIndex(i => i < 1 ? changedTodos.length - 1 : i - 1)}>
+                    {"<"} Previous
+                </span>
+                <span>{currentIndex + 1} / {changedTodos.length}</span>
+                <span className={classes.navButton} onClick={() => setCurrentIndex(i => i > changedTodos.length - 2 ? 0 : i + 1)}>
+                    Next {">"}
+                </span>
+            </div>
 
-                            <select
-                                value={todo.status}
-                                onChange={e =>
-                                    updateField(todo.id, 'status', e.target.value as Todo['status'])
-                                }
-                                style={{ marginRight: '0.5rem' }}
-                            >
-                                <option value="TO_DO">To Do</option>
-                                <option value="IN_PROGRESS">In Progress</option>
-                                <option value="COMPLETED">Completed</option>
-                                <option value="ON_HOLD">On Hold</option>
-                            </select>
+            {currentTodo && (
+                <EditTodoForm
+                    todo={currentTodo}
+                    categories={categories}
+                    onUpdate={updateCurrentField}
+                />
+            )}
 
-                            <select
-                                value={todo.priority}
-                                onChange={e =>
-                                    updateField(todo.id, 'priority', e.target.value as Todo['priority'])
-                                }
-                                style={{ marginRight: '0.5rem' }}
-                            >
-                                <option value="LOW">Low</option>
-                                <option value="MEDIUM">Medium</option>
-                                <option value="HIGH">High</option>
-                            </select>
-
-                            <label className="archive-checkbox">
-                                <span>Archived</span>
-                                <input
-                                    type="checkbox"
-                                    checked={todo.archivedAt ? true : false}
-                                    onChange={() => updateField(todo.id, 'archivedAt', todo.archivedAt ? null : formatDate(new Date))}
-                                />
-                            </label>
-
-                            <CategoryToggleButtons
-                                selected={todo.categories}
-                                allCategories={categories}
-                                onToggle={updated => {
-                                    console.log('Updating todo', todo.id, 'with categories', updated.map(c => c.id));
-                                    updateField(todo.id, 'categories', updated)
-                                }}
-                            />
-
-                        </div>
-                    ))}
-
-                    <button onClick={cancelEditMode} style={{ margin: "0.5rem" }}>Cancel</button>
-                    <button onClick={handleAddTodo} style={{ margin: "0.5rem" }}>Add Todo</button>
-                    <button onClick={exitEditMode} style={{ margin: "0.5rem" }}>Apply Changes</button>
-                </>
+            {confirmingCancel ? (
+                <div className={classes.confirmationBox}>
+                    <p>Discard all unsaved changes?</p>
+                    <div className={classes.confirmationButtons}>
+                        <span>
+                            <button onClick={handleCancelBack}>Go Back</button>
+                            <button onClick={handleConfirmCancel}>Confirm</button></span>
+                    </div>
+                </div>
+            ) : (
+                <div className={classes.buttonRow}>
+                    <button onClick={handleAddTodo}>Add New Todo</button>
+                    <span>
+                        <button onClick={handleCancel} data-trigger-cancel>Cancel</button>
+                        <button onClick={handleHide}>Hide</button>
+                        <button onClick={handleApplyChanges}>Apply Changes</button>
+                    </span>
+                </div>
             )}
         </div>
     )
-}
+};
 
 export default EditTodosMode
-
-
-{/* <select
-                                multiple
-                                value={todo.categories.map(category => String(category.id))}
-                                onChange={e => {
-                                    const selectedOptions = Array.from(e.target.selectedOptions).map(opt => String(opt.value));
-                                    const selectedCategories = categories.filter(category => selectedOptions.includes(String(category.id)));
-                                    updateField(todo.id, 'categories', selectedCategories);
-                                }}
-                                style={{ marginRight: '0.5rem' }}
-                            >
-                                {categories.map(category => (
-                                    <option key={category.id} value={String(category.id)}>
-                                        {category.name}
-                                    </option>
-                                ))}
-                            </select> */}
-{/* <button
-                                style={{ marginLeft: '1rem', width: "80px" }}
-                                onClick={() => updateField(todo.id, 'archivedAt', todo.archivedAt ? null : formatDate(new Date))}
-                            >
-                                {todo.archivedAt ? 'Unarchive' : 'Archive'}
-                            </button> */}

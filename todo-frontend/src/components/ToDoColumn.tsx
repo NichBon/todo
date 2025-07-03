@@ -8,9 +8,10 @@ type Props = {
   columnId: string;
   column: ColumnData;
   onDrop: (todoId: number, destinationColId: string) => void;
+  onTodoClick: (todo: Todo) => void;
 }
 
-const TodoColumn: React.FC<Props> = ({ columnId, column, onDrop }) => {
+const TodoColumn: React.FC<Props> = ({ columnId, column, onDrop, onTodoClick }) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ const TodoColumn: React.FC<Props> = ({ columnId, column, onDrop }) => {
     >
       <h3>{column.name}</h3>
       {column.items.map((todo: Todo) => (
-        <TodoItem key={todo.id} todo={todo} />
+        <TodoItem key={todo.id} todo={todo} onClick={() => onTodoClick(todo)} />
       ))}
     </div>
   );

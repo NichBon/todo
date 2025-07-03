@@ -1,5 +1,6 @@
 package io.nichbon.todo.todo.dtos;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import io.nichbon.todo.todo.Todo.CompletionStatus;
@@ -13,23 +14,20 @@ public class CreateTodoDTO {
     private String name;
 
     @NotNull
+    @NotBlank
     private CompletionStatus status;
 
-    public List<Long> getCategoryIds() {
-        return categoryIds;
-    }
-
-    public void setCategoryIds(List<Long> categoryIds) {
-        this.categoryIds = categoryIds;
-    }
-
     @NotNull
+    @NotBlank
     private Priority priority;
 
-    List<Long> categoryIds;
+    private List<Long> categoryIds;
+
+    public CreateTodoDTO() {
+    }
 
     public CreateTodoDTO(@NotBlank String name, @NotNull CompletionStatus status, @NotNull Priority priority,
-            List<Long> categoryIds) {
+            List<Long> categoryIds, LocalDateTime archivedAt) {
         this.name = name;
         this.status = status;
         this.priority = priority;
@@ -48,4 +46,11 @@ public class CreateTodoDTO {
         return priority;
     }
 
+    public List<Long> getCategoryIds() {
+        return categoryIds;
+    }
+
+    public void setCategoryIds(List<Long> categoryIds) {
+        this.categoryIds = categoryIds;
+    }
 }

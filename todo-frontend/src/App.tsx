@@ -1,5 +1,5 @@
 import './App.css'
-import BoardLayout from './components/BoardLayout'
+import BoardLayout from './components/BoardLayout/BoardLayout'
 
 function App() {
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Category } from '../types/types';
+import { maxAppWidth, type Category } from '../types/types';
 import CategoryFilterButton from './CategoryFilterButton';
 
 export type FilterState = 'include' | 'exclude' | 'none';
@@ -29,7 +29,7 @@ const CategoryFilterBar: React.FC<Props> = ({ categories, onChange }) => {
     };
 
     return (
-        <div style={{ padding: '8px', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ padding: '8px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', maxWidth: maxAppWidth }}>
             {categories.map((category) => (
                 <CategoryFilterButton
                     key={category.id}

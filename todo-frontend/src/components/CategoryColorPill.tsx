@@ -12,10 +12,9 @@ const CategoryColorPill: React.FC<Props> = ({ category }) => {
             color: '#fff',
             padding: '2px 8px',
             borderRadius: '999px',
-            fontSize: '0.75rem',
             marginRight: '6px',
             whiteSpace: 'nowrap',
-            height: '5px'
+            height: '5px',
         }}>
         </span>
     )

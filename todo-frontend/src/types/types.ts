@@ -13,7 +13,7 @@ export const columnIdToStatus: Record<string, CompletionStatus> = {
     TO_DO: 'TO_DO',
     IN_PROGRESS: 'IN_PROGRESS',
     ON_HOLD: 'ON_HOLD',
-    COMPLETED: 'COMPLETED'
+    DONE: 'COMPLETED'
 };
 
 export const COLORS = [
@@ -41,7 +41,7 @@ export const CATEGORY_TEXT_COLOR: Record<string, string> = {
 export type Color = typeof COLORS[number]
 
 export type Todo = {
-    id: string;
+    id: number;
     name: string;
     priority: Priority;
     createdAt: string;
@@ -60,7 +60,7 @@ export interface CreateTodoDTO {
 }
 
 export interface UpdateTodoDTO extends CreateTodoDTO {
-    id: string;
+    id: number;
 }
 
 
@@ -106,7 +106,7 @@ export const areCategoriesEqual = (a: Category[], b: Category[]): boolean => {
 export interface CreateCategoryDTO {
     name: string;
     color: Color;
-    todoIds: string[];
+    todoIds: number[];
 }
 
 export interface UpdateCategoryDTO extends CreateCategoryDTO {
@@ -155,3 +155,5 @@ export const emptyBoard: Columns = {
         items: []
     }
 };
+
+export const maxAppWidth = '1184px';

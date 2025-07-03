@@ -25,34 +25,19 @@ export async function fetchCategories(): Promise<Category[]> {
 }
 
 export async function batchUpdateTodos(todos: Todo[]): Promise<Todo[]> {
-
-    const patchTodos: UpdateTodoDTO[] = todos
-        .filter((todo) => !todo.id.toString().startsWith('temp-'))
-        .map((todo) => toUpdateTodoDTO(todo));
-    const postTodos: CreateTodoDTO[] = todos
-        .filter((todo) => todo.id.toString().startsWith('temp-'))
-        .map((todo) => toCreateTodoDTO(todo));
-
-    const patchResponse = await fetch(`${BASE_URL}/todos/batch`, {
-        method: 'PATCH',
+    const formattedTodos = todos.map((todo) => toUpdateTodoDTO(todo));
+    console.log(todos)
+    const response = await fetch(`${BASE_URL}/todos/batch`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(patchTodos)
+        body: JSON.stringify(formattedTodos)
     });
 
-    if (!patchResponse.ok) {
-        throw new Error(`Failed to update todos: ${patchResponse.statusText}`);
+    if (!response.ok) {
+        throw new Error(`Failed to update todos: ${response.statusText}`);
     }
 
-    const postResponse = await fetch(`${BASE_URL}/todos/batch`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(postTodos)
-    });
-
-    const patchData: Todo[] = await patchResponse.json();
-    const postData: Todo[] = await postResponse.json();
-
-    const data = patchData.concat(postData);
+    const data: Todo[] = await response.json()
     console.log(data)
     return data;
 }
@@ -112,3 +97,36 @@ export async function batchUpdateCategories(categories: Category[]): Promise<Cat
 
     return responses;
 }
+
+// export async function batchUpdateTodos(todos: Todo[]): Promise<Todo[]> {
+// const patchTodos: UpdateTodoDTO[] = todos
+//     .filter((todo) => !todo.id.toString().startsWith('temp-'))
+//     .map((todo) => toUpdateTodoDTO(todo));
+// const postTodos: CreateTodoDTO[] = todos
+//     .filter((todo) => todo.id.toString().startsWith('temp-'))
+//     .map((todo) => toCreateTodoDTO(todo));
+
+// const patchResponse = await fetch(`${BASE_URL}/todos/batch`, {
+//     method: 'PATCH',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify(patchTodos)
+// });
+
+// if (!patchResponse.ok) {
+//     throw new Error(`Failed to update todos: ${patchResponse.statusText}`);
+// }
+
+// const postResponse = await fetch(`${BASE_URL}/todos/batch`, {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify(postTodos)
+// });
+
+// const patchData: Todo[] = await patchResponse.json();
+// const postData: Todo[] = await postResponse.json();
+
+// const data = patchData.concat(postData);
+// console.log('returned todos')
+// console.log(data)
+// return data;
+// }

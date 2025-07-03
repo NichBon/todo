@@ -1,3 +1,4 @@
+import { CATEGORY_TEXT_COLOR } from '../../types/types';
 import './CategoryToggleButtons.scss';
 
 interface Category {
@@ -33,18 +34,19 @@ export const CategoryToggleButtons: React.FC<Props> = ({ selected, allCategories
                 );
 
                 return (
-                    <button
+                    <div
                         key={category.id}
                         className={`category-button ${isSelected ? 'selected' : ''}`}
                         style={{
-                            borderColor: category.color.toLowerCase(),
-                            backgroundColor: isSelected ? category.color.toLowerCase() : 'transparent',
-                            color: isSelected ? '#fff' : category.color.toLowerCase(),
+                            backgroundColor: category.color.toLowerCase(),
+                            color: `${CATEGORY_TEXT_COLOR[category.color] || 'white'}`,
+                            border: `1px solid ${isSelected ? 'lightgrey' : category.color.toLowerCase() || 'white'}`,
+                            opacity: isSelected ? 1 : 0.4,
                         }}
                         onClick={() => handleToggle(category)}
                     >
                         {category.name}
-                    </button>
+                    </div>
                 );
             })}
         </div>

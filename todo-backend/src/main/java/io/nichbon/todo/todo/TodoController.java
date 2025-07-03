@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/todos")
@@ -83,4 +85,14 @@ public class TodoController {
         }
     }
 
+    @PutMapping("/batch")
+    public ResponseEntity<?> batchPut(@Valid @RequestBody UpdateTodoDTO[] data) {
+        try {
+            List<Todo> todos = this.todoService.batchPut(data);
+            return new ResponseEntity<>(todos, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

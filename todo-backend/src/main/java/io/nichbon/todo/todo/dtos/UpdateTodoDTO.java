@@ -1,6 +1,9 @@
 package io.nichbon.todo.todo.dtos;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.nichbon.todo.todo.Todo.CompletionStatus;
 import io.nichbon.todo.todo.Todo.Priority;
 import jakarta.validation.constraints.NotNull;
@@ -16,14 +19,16 @@ public class UpdateTodoDTO {
 
     private Priority priority;
 
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
-    private Date archivedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+    private LocalDateTime archivedAt;
 
     private Long[] categoryIds;
 
-    public UpdateTodoDTO(@NotNull Long id, String name, CompletionStatus status, Priority priority, Date createdAt,
-            Date archivedAt, Long[] categoryIds) {
+    public UpdateTodoDTO(@NotNull Long id, String name, CompletionStatus status, Priority priority,
+            LocalDateTime createdAt,
+            LocalDateTime archivedAt, Long[] categoryIds) {
         this.id = id;
         this.name = name;
         this.status = status;
@@ -33,11 +38,11 @@ public class UpdateTodoDTO {
         this.categoryIds = categoryIds;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public Date getArchivedAt() {
+    public LocalDateTime getArchivedAt() {
         return archivedAt;
     }
 
