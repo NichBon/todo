@@ -1,7 +1,7 @@
 
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEffect, useRef } from 'react';
-import type { ColumnData, Todo } from '../types/types';
+import type { ColumnData, Todo } from '../../types/types';
 import TodoItem from './TodoItem';
 
 type Props = {

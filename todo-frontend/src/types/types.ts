@@ -55,7 +55,7 @@ export interface CreateTodoDTO {
     name: string;
     priority: string;
     status: CompletionStatus;
-    categoryIds: string[];
+    categoryIds: number[];
     archivedAt: string | null;
 }
 
@@ -88,7 +88,7 @@ export function toUpdateTodoDTO(todo: Todo): UpdateTodoDTO {
 };
 
 export type Category = {
-    id: string;
+    id: number;
     name: string;
     color: Color;
     todos: Todo[];
@@ -110,7 +110,7 @@ export interface CreateCategoryDTO {
 }
 
 export interface UpdateCategoryDTO extends CreateCategoryDTO {
-    id: string;
+    id: number;
 }
 
 export function toCreateCategoryDTO(category: Category): CreateCategoryDTO {
@@ -155,5 +155,7 @@ export const emptyBoard: Columns = {
         items: []
     }
 };
+
+export type modalTypes = 'category' | 'todo';
 
 export const maxAppWidth = '1184px';

@@ -1,6 +1,6 @@
-import { formatDate } from "../../services/dateService";
-import type { Category, Todo } from "../../types/types";
-import { CategoryToggleButtons } from "../CategoryToggleButtons/CategoryToggleButtons";
+import { formatDate } from "../../../services/dateService";
+import type { Category, Todo } from "../../../types/types";
+import { CategoryToggleButtons } from "../../CategoryComponents/CategoryToggleButtons/CategoryToggleButtons";
 import classes from './EditTodoForm.module.scss';
 
 type EditTodoFormProps = {

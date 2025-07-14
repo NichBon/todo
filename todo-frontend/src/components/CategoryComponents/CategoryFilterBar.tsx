@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { maxAppWidth, type Category } from '../types/types';
+import { maxAppWidth, type Category } from '../../types/types';
 import CategoryFilterButton from './CategoryFilterButton';
 
 export type FilterState = 'include' | 'exclude' | 'none';

@@ -1,4 +1,4 @@
-import { type Category, type Todo, type UpdateTodoDTO, type CreateTodoDTO, toCreateTodoDTO, toUpdateCategoryDTO, toCreateCategoryDTO, type UpdateCategoryDTO, type CreateCategoryDTO, toUpdateTodoDTO } from "../types/types";
+import { type Category, type Todo, toUpdateCategoryDTO, toCreateCategoryDTO, type UpdateCategoryDTO, type CreateCategoryDTO, toUpdateTodoDTO } from "../types/types";
 
 const BASE_URL: string = 'http://localhost:8080'
 
@@ -97,36 +97,3 @@ export async function batchUpdateCategories(categories: Category[]): Promise<Cat
 
     return responses;
 }
-
-// export async function batchUpdateTodos(todos: Todo[]): Promise<Todo[]> {
-// const patchTodos: UpdateTodoDTO[] = todos
-//     .filter((todo) => !todo.id.toString().startsWith('temp-'))
-//     .map((todo) => toUpdateTodoDTO(todo));
-// const postTodos: CreateTodoDTO[] = todos
-//     .filter((todo) => todo.id.toString().startsWith('temp-'))
-//     .map((todo) => toCreateTodoDTO(todo));
-
-// const patchResponse = await fetch(`${BASE_URL}/todos/batch`, {
-//     method: 'PATCH',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(patchTodos)
-// });
-
-// if (!patchResponse.ok) {
-//     throw new Error(`Failed to update todos: ${patchResponse.statusText}`);
-// }
-
-// const postResponse = await fetch(`${BASE_URL}/todos/batch`, {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(postTodos)
-// });
-
-// const patchData: Todo[] = await patchResponse.json();
-// const postData: Todo[] = await postResponse.json();
-
-// const data = patchData.concat(postData);
-// console.log('returned todos')
-// console.log(data)
-// return data;
-// }

@@ -1,4 +1,4 @@
-import { CATEGORY_TEXT_COLOR } from '../../types/types';
+import { CATEGORY_TEXT_COLOR } from '../../../types/types';
 import './CategoryToggleButtons.scss';
 
 interface Category {

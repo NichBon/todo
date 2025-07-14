@@ -1,7 +1,7 @@
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import React, { useEffect, useRef } from 'react';
-import type { Todo } from '../types/types';
-import CategoryColorPill from './CategoryColorPill';
+import type { Todo } from '../../types/types';
+import CategoryColorPill from '../CategoryComponents/CategoryColorPill.tsx';
 
 type Props = {
     todo: Todo;

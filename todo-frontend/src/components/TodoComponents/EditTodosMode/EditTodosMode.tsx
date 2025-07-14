@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { batchUpdateTodos } from '../../services/dbservice';
-import { areCategoriesEqual, type Category, type Todo } from '../../types/types';
-import { formatDate } from '../../services/dateService';
+import { batchUpdateTodos } from '../../../services/dbservice';
+import { areCategoriesEqual, type Category, type Todo } from '../../../types/types';
+import { formatDate } from '../../../services/dateService';
 import classes from './EditTodosMode.module.scss';
 
 import EditTodoForm from '../EditToDoForm/EditTodoForm';
@@ -35,6 +35,19 @@ const EditTodosMode: React.FC<Props> = ({
     const currentTodo = changedTodos[currentIndex];
     const isDirty = useRef(wasDirty)
 
+
+
+    useEffect(() => {
+        setChangedTodos(structuredClone(todos));
+    }, [todos])
+
+    useEffect(() => {
+        setChangedTodos(structuredClone(todos));
+        if (clickedIndex !== undefined) {
+            setCurrentIndex(clickedIndex);
+        }
+    }, [todos, clickedIndex]);
+
     const updateCurrentField = (field: keyof Todo, value: any) => {
         if (!isDirty.current) isDirty.current = true;
         setChangedTodos(prev => {
@@ -48,17 +61,6 @@ const EditTodosMode: React.FC<Props> = ({
         }
         );
     };
-
-    useEffect(() => {
-        setChangedTodos(structuredClone(todos));
-    }, [todos])
-
-    useEffect(() => {
-        setChangedTodos(structuredClone(todos));
-        if (clickedIndex !== undefined) {
-            setCurrentIndex(clickedIndex);
-        }
-    }, [todos, clickedIndex]);
 
     const handleApplyChanges = async () => {
         const updates = changedTodos.filter((todo, id) => {

@@ -1,4 +1,4 @@
-import { CATEGORY_TEXT_COLOR, type Category } from '../types/types';
+import { CATEGORY_TEXT_COLOR, type Category } from '../../types/types';
 
 type FilterState = 'include' | 'exclude' | 'none';
 
