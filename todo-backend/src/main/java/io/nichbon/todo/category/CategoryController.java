@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,6 +73,17 @@ public class CategoryController {
     public ResponseEntity<String> deleteById(@PathVariable long id) {
         String deleted = this.categoryService.deleteById(id);
         return new ResponseEntity<>(deleted, HttpStatus.OK);
+    }
+
+    @PutMapping("/batch")
+    public ResponseEntity<?> batchPut(@Valid @RequestBody UpdateCategoryDTO[] data) {
+        try {
+            List<Category> categories = this.categoryService.batchPut(data);
+            return new ResponseEntity<>(categories, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

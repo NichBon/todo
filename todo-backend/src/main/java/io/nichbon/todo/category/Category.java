@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "categories")
@@ -21,27 +22,16 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    public enum Color {
-        RED,
-        BLUE,
-        PURPLE,
-        GREEN,
-        YELLOW,
-        ORANGE,
-        GREY,
-        CYAN,
-    }
+    @Column
+    @Pattern(regexp = "^#([0-9a-fA-F]{6})$", message = "Invalid hex color format")
+    private String color;
 
     @Column
     @NotNull
     @NotEmpty
     private String name;
-
-    @Column
-    @NotNull
-    private Color color;
 
     @ManyToMany(mappedBy = "categories")
     @JsonBackReference
@@ -51,11 +41,11 @@ public class Category {
         return name;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,11 +53,11 @@ public class Category {
         this.name = name;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
     }
 

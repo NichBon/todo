@@ -138,9 +138,9 @@ public class TodoService {
                     }
                 }).toList();
 
-        List<Todo> updatedTodos = todoRepository.saveAll(todos);
-        return updatedTodos;
-
+        todoRepository.saveAll(todos);
+        List<Todo> allTodos = this.getAll();
+        return allTodos;
     }
 
 }

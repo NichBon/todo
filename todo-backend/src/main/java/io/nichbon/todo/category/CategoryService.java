@@ -90,4 +90,23 @@ public class CategoryService {
         }
     }
 
+    public List<Category> batchPut(UpdateCategoryDTO[] data) {
+        List<Category> categories = Arrays.stream(data)
+                .map(dto -> {
+                    if (dto.getId() >= 0) {
+                        Category foundCategory = findById(dto.getId());
+                        this.modelMapper.map(dto, foundCategory);
+                        return foundCategory;
+                    } else {
+                        Category newCategory = modelMapper.map(dto, Category.class);
+                        newCategory.setId(null);
+                        return newCategory;
+                    }
+                }).toList();
+
+        categoryRepository.saveAll(categories);
+        List<Category> allCategories = this.getAll();
+        return allCategories;
+    }
+
 }
