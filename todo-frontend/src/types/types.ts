@@ -40,6 +40,8 @@ export const CATEGORY_TEXT_COLOR: Record<string, string> = {
 
 export type Color = typeof COLORS[number]
 
+
+//TODOS
 export type Todo = {
     id: number;
     name: string;
@@ -63,7 +65,6 @@ export interface UpdateTodoDTO extends CreateTodoDTO {
     id: number;
 }
 
-
 export function toCreateTodoDTO(todo: Todo): CreateTodoDTO {
     return {
         name: todo.name,
@@ -73,7 +74,6 @@ export function toCreateTodoDTO(todo: Todo): CreateTodoDTO {
         categoryIds: todo.categories.map(category => category.id)
     };
 }
-
 
 export function toUpdateTodoDTO(todo: Todo): UpdateTodoDTO {
     return {
@@ -87,11 +87,13 @@ export function toUpdateTodoDTO(todo: Todo): UpdateTodoDTO {
 
 };
 
+
+// CATEGORIES
 export type Category = {
     id: number;
     name: string;
-    color: Color;
-    todos: Todo[];
+    color: string;
+    //todos: Todo[];
 };
 
 export const areCategoriesEqual = (a: Category[], b: Category[]): boolean => {
@@ -105,8 +107,8 @@ export const areCategoriesEqual = (a: Category[], b: Category[]): boolean => {
 
 export interface CreateCategoryDTO {
     name: string;
-    color: Color;
-    todoIds: number[];
+    color: string;
+    //todoIds: number[];
 }
 
 export interface UpdateCategoryDTO extends CreateCategoryDTO {
@@ -117,7 +119,7 @@ export function toCreateCategoryDTO(category: Category): CreateCategoryDTO {
     return {
         name: category.name,
         color: category.color,
-        todoIds: category.todos.map(todo => todo.id)
+        //todoIds: category.todos.map(todo => todo.id)
     };
 }
 
@@ -126,10 +128,11 @@ export function toUpdateCategoryDTO(category: Category): UpdateCategoryDTO {
         id: category.id,
         name: category.name,
         color: category.color,
-        todoIds: category.todos.map(todo => todo.id)
+        //todoIds: category.todos.map(todo => todo.id)
     };
 }
 
+//COLUMNS
 export type ColumnData = {
     name: string;
     items: Todo[];

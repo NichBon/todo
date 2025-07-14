@@ -29,6 +29,7 @@ const EditCategoriesMode: React.FC<Props> = ({
     const isDirty = useRef(wasDirty);
 
     useEffect(() => {
+        if (categories.length === 0) handleAddCategory();
         setChangedCategories(structuredClone(categories));
     }, [categories]);
 
@@ -58,8 +59,8 @@ const EditCategoriesMode: React.FC<Props> = ({
             );
         });
 
-        await batchUpdateCategories(updates);
-        onExit(changedCategories);
+        const updatedCategories = await batchUpdateCategories(updates);
+        onExit(updatedCategories);
     };
 
     const handleHide = () => {
@@ -84,14 +85,14 @@ const EditCategoriesMode: React.FC<Props> = ({
     };
 
     const handleAddCategory = () => {
-        const newId = (changedCategories[changedCategories.length - 1].id < 0) ?
-            changedCategories[changedCategories.length - 1].id - 1
+        const last = changedCategories[changedCategories.length - 1];
+        const newId = (last?.id && last.id < 0) ?
+            last.id - 1
             : -1;
         const newCategory: Category = {
             id: newId,
             name: "",
             color: 'RED',
-            todos: [],
         }
 
         setChangedCategories(prev => [...prev, newCategory]);

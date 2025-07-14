@@ -12,11 +12,10 @@ type Props = {
 const CategoryFilterBar: React.FC<Props> = ({ categories, onChange }) => {
     const [filters, setFilters] = useState<Record<string, FilterState>>({});
 
-    const handleFilterChange = (categoryId: string, newState: FilterState) => {
+    const handleFilterChange = (categoryId: number, newState: FilterState) => {
         const newFilters = { ...filters, [categoryId]: newState };
         setFilters(newFilters);
         onChange(newFilters);
-        console.log(newFilters);
     };
 
     const resetFilters = () => {

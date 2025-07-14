@@ -1,4 +1,4 @@
-import { type Category, type Todo, toUpdateCategoryDTO, toCreateCategoryDTO, type UpdateCategoryDTO, type CreateCategoryDTO, toUpdateTodoDTO } from "../types/types";
+import { type Category, type Todo, toUpdateCategoryDTO, toUpdateTodoDTO } from "../types/types";
 
 const BASE_URL: string = 'http://localhost:8080'
 
@@ -54,46 +54,65 @@ export async function updateTodo(todo: Todo): Promise<Todo> {
 }
 
 export async function batchUpdateCategories(categories: Category[]): Promise<Category[]> {
+    const formattedTodos = categories.map((cat) => toUpdateCategoryDTO(cat));
     console.log(categories)
-    const patchCategories: UpdateCategoryDTO[] = categories
-        .filter(category => !category.id.toString().startsWith('temp-'))
-        .map(toUpdateCategoryDTO);
+    const response = await fetch(`${BASE_URL}/categories/batch`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formattedTodos)
+    });
 
-    const postCategories: CreateCategoryDTO[] = categories
-        .filter(category => category.id.toString().startsWith('temp-'))
-        .map(toCreateCategoryDTO);
-
-    const responses: Category[] = [];
-
-    if (patchCategories.length > 0) {
-        const patchRes = await fetch(`${BASE_URL}/categories/batch`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(patchCategories)
-        });
-
-        if (!patchRes.ok) {
-            throw new Error(`Failed to update categories: ${patchRes.statusText}`);
-        }
-
-        const patchData: Category[] = await patchRes.json();
-        responses.push(...patchData);
+    if (!response.ok) {
+        throw new Error(`Failed to update todos: ${response.statusText}`);
     }
 
-    if (postCategories.length > 0) {
-        const postRes = await fetch(`${BASE_URL}/categories/batch`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(postCategories)
-        });
-
-        if (!postRes.ok) {
-            throw new Error(`Failed to create categories: ${postRes.statusText}`);
-        }
-
-        const postData: Category[] = await postRes.json();
-        responses.push(...postData);
-    }
-
-    return responses;
+    const data: Category[] = await response.json()
+    console.log(data)
+    return data;
 }
+
+
+// export async function batchUpdateCategories(categories: Category[]): Promise<Category[]> {
+//     console.log(categories)
+//     const patchCategories: UpdateCategoryDTO[] = categories
+//         .filter(category => !category.id.toString().startsWith('temp-'))
+//         .map(toUpdateCategoryDTO);
+
+//     const postCategories: CreateCategoryDTO[] = categories
+//         .filter(category => category.id.toString().startsWith('temp-'))
+//         .map(toCreateCategoryDTO);
+
+//     const responses: Category[] = [];
+
+//     if (patchCategories.length > 0) {
+//         const patchRes = await fetch(`${BASE_URL}/categories/batch`, {
+//             method: 'PATCH',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(patchCategories)
+//         });
+
+//         if (!patchRes.ok) {
+//             throw new Error(`Failed to update categories: ${patchRes.statusText}`);
+//         }
+
+//         const patchData: Category[] = await patchRes.json();
+//         responses.push(...patchData);
+//     }
+
+//     if (postCategories.length > 0) {
+//         const postRes = await fetch(`${BASE_URL}/categories/batch`, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(postCategories)
+//         });
+
+//         if (!postRes.ok) {
+//             throw new Error(`Failed to create categories: ${postRes.statusText}`);
+//         }
+
+//         const postData: Category[] = await postRes.json();
+//         responses.push(...postData);
+//     }
+
+//     return responses;
+// }

@@ -26,4 +26,19 @@
     input[type="checkbox"] {
         margin-top: 0.5rem;
     }
+
+    .colorPickerSection {
+        display: flex;
+        justify-content: space-around;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        .categoryButtonPreview {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            width: 200px;
+        }
+    }
 }

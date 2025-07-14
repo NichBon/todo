@@ -1,11 +1,12 @@
-import { CATEGORY_TEXT_COLOR, type Category } from '../../types/types';
+import { textColorCalc } from '../../services/textColor';
+import { type Category } from '../../types/types';
 
 type FilterState = 'include' | 'exclude' | 'none';
 
 type Props = {
     category: Category;
     filterState: FilterState;
-    onFilterChange: (categoryId: string, newState: FilterState) => void;
+    onFilterChange: (categoryId: number, newState: FilterState) => void;
 };
 
 const stateCycle: Record<FilterState, FilterState> = {
@@ -39,7 +40,8 @@ const CategoryFilterButton: React.FC<Props> = ({ category, filterState, onFilter
                 cursor: 'pointer',
                 fontWeight: 'bold',
                 opacity: `${filterState === 'none' ? 0.6 : 1}`,
-                color: `${CATEGORY_TEXT_COLOR[category.color] || 'white'}`
+                //color: `${CATEGORY_TEXT_COLOR[category.color] || 'white'}`
+                color: `${textColorCalc(category.color) || 'white'}`
             }}
         >
             {category.name} {filterState !== 'none' ? `(${filterState})` : ''}

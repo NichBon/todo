@@ -165,7 +165,7 @@ const BoardLayout = () => {
 
     const modalCategoryChange = (updated: Category[], isDirty: boolean) => {
         dirtyCategories.current = updated;
-        todosAreDirty.current = isDirty;
+        categoriesAreDirty.current = isDirty;
     }
 
     const handleEdit = (type: modalTypes) => {
@@ -220,7 +220,7 @@ const BoardLayout = () => {
                 onChange={handleCategoryFilterChange}
             />
 
-            {todos.length !== 0 && <div style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
+            {<div style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
                 {Object.entries(columns).map(([id, column]) => (
                     <ToDoColumn key={id} columnId={id} column={column} onDrop={handleDrop} onTodoClick={handleTodoClick} />
                 ))}

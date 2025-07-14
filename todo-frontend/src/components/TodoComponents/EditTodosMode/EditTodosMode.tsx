@@ -75,8 +75,8 @@ const EditTodosMode: React.FC<Props> = ({
             );
         });
 
-        await batchUpdateTodos(updates)
-        onExit(changedTodos);
+        const updatedTodos = await batchUpdateTodos(updates)
+        onExit(updatedTodos);
     };
 
     const handleHide = () => {
@@ -101,7 +101,8 @@ const EditTodosMode: React.FC<Props> = ({
     };
 
     const handleAddTodo = () => {
-        const newId = (changedTodos[changedTodos.length - 1].id < 0) ?
+        const last = changedTodos[changedTodos.length - 1];
+        const newId = (last?.id && last.id < 0) ?
             changedTodos[changedTodos.length - 1].id - 1
             : -1;
         const newTodo: Todo = {
